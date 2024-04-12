@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Money Remed</title>
+        <link href="/user/user.css" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/user/navbar.css" />
+        <link rel="stylesheet" type="text/css" href="/user/sidebar.css" />
+
+        <script src="/user/userScrpt.js"></script>
+        <script src="/user/sidebar.js"></script>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+
+        <nav class="navbar navbar-def navbar-fixed-top">
+            <div class="container-fluid ">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../">
+                        <img style="margin-top: -10px; width: 20vh; height: 5vh; " alt="brand" src="/images/logo/logo.png">
+                  </a>
+              </div>
+          
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                
+                
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li id="dashHome" class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i> Home <span class="sr-only">(current)</span></a></li>
+                    <li id="logout" onclick="logout()"><a href="#" ><i class="fa fa-user" aria-hidden="true"></i> Logout</a></li>
+
+                    <li id="login" class="active" onclick="loginClick()"><a href="#" ><i class="fa fa-amazon" aria-hidden="true"></i> Login</a></li>
+                    <li id="regit" onclick="regClick()"><a href="#" ><i class="fa fa-user" aria-hidden="true"></i> Register</a></li>
+                    
+                </ul>
+              </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+          </nav>
+
+
+
+
+        <!-- check alredy login -->
+        <input type="hidden" id="allredyloginuserID" value="<%=allredylogin%>">
+        <!-- check alredy login -->
+        <input type="hidden" id="sponsRootID" value="<%=sponsRootID%>">
+        <input type="hidden" id="sponsID" value="<%=sponsID%>">
+        <input type="hidden" id="sponsName" value="<%=sponsName%>">
+
+
+        <div  class="container-fluid">
+
+          
+
+
+        <!-- User Login -->
+        
+        
+            <div id="loginPanel" style="margin-top:3vh; display: none;" class="row">
+                <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                    <div class="panel panel-success">
+                          <div class="panel-heading">
+                                <h3 class="panel-title">Login</h3>
+                          </div>
+                          <div class="panel-body">
+                                
+                                <div class="form-group">
+                                    <label>Username</label>
+                                        <input type="text" name="" id="loginEmail" class="form-control" placeholder="User Email">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Password</label>
+                                        <input type="password" name="" id="loginPassword" class="form-control" placeholder="Password">
+                                </div>
+                                <button onclick="loginProcess()" type="button" class="btn btn-primary">Login</button>
+                                <button onclick="forgetpassword()" type="button" class="btn btn-sm-square btn-danger" style="margin-left: 4vh;">Forget Password</button>
+                          </div>
+                    </div>
+                    
+                </div>
+            </div>
+        
+            
+        <!-- User Login End-->
+
+         <!-- User Register -->
+
+         <div id="RegistrationPanel" style="margin-top:3vh; display: none;" class="row">
+            <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                <div class="panel panel-success">
+                      <div class="panel-heading">
+                            <h3 class="panel-title">Register New Partner</h3>
+                      </div>
+                      <div class="panel-body">
+                            <div class="form-group">
+                                <label>Username</label>
+                                    <input type="text"  id="regEmail" class="form-control" placeholder="Email ie hkdhkfhs@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                    <input type="password"  id="regPassword" class="form-control" placeholder="6 to 18 Chracter">
+                                    <div style=" margin-top: -3.5vh; margin-left: 90%; font-size: large;"><i id="togglePassword" class="fa fa-eye" aria-hidden="true"></i></div>   
+                            </div>
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                    <input type="text"  id="regUserName" class="form-control" placeholder="ei: Basudeb Roy">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                   <textarea id="regAddress" class="form-control" rows="3" ></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Mobile Number</label>
+                                    <input type="number"  id="regMobile" class="form-control" placeholder=" 10 Digit Number">
+                            </div>
+                           
+                            <button onclick="newPetnerRegister()" type="button" class="btn btn-primary">Register</button>
+                            <div class="form-group">
+                                <label>Sponsor ID</label>
+                                    <input onkeydown="searchdown()" onkeyup="searchup()" type="text"  id="sponsorID" class="form-control" placeholder="Sponsor ID : ei 10234" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>Sponsor Name</label>
+                                    <input type="text"  id="SponsorName" class="form-control" readonly>
+                                    <input type="text"  id="SponsorRootID" class="form-control" readonly>
+                            </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+        
+        
+
+        <div id="CompleteRegistration">
+            <div  style="margin-top:3vh; height:100vh" class="row">
+                <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                    <div class="panel panel-success">
+                          <div class="panel-heading">
+                                <h3 class="panel-title">You Almost Done </h3>
+                               
+                          </div>
+                          <div class="panel-body">
+
+                            
+                            <div class="page-header">
+                              <h1>Welcome <small> Profile Under Review</small></h1>
+                              <p>Call to your Seneor for details</p>
+                            </div>
+                            
+
+                            <!-- <div class="form-group">
+                                <label>Aadhar Number</label>
+                                    <input type="text"  id="Aadhar" class="form-control" >
+                            </div> -->
+
+                            <!-- <div class="form-group">
+                                <label>Western Union ID</label>
+                                    <input type="text"  id="wuID" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Western Union Password</label>
+                                    <input type="text"  id="wuPsd" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Binance ID</label>
+                                    <input type="text"  id="BinanceID" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Binance Password</label>
+                                    <input type="text"  id="BinancePsd" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email ID</label>
+                                    <input type="text"  id="EmlID" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email Password</label>
+                                    <input type="text"  id="EmlPsd" class="form-control" >
+                            </div>
+
+                            <div class="form-group">
+                                <label>Bank Details</label> 
+                                <textarea  id="BankDelais" class="form-control" rows="3" placeholder="Name , A/c, IFSC, Bank Nane"></textarea>
+                                    
+                            </div>
+
+                            <button onclick="completeReg()" type="button" class="btn btn-primary">Submit</button>
+ -->
+
+                          </div>
+
+                    </div>  
+                </div>
+            </div>            
+        </div>
+
+       
+
+        <div id="ActivateThisUser" style="display: none;">
+
+        </div>
+
+
+        <!-- User Register End-->
+
+        <!-- User Pannel -->
+        <div id="UserPanel" style="margin-top:3vh; display: none;" class="row">
+            <div  id="sidebar-waper">
+                <div class="togle-btn" onclick="sidebartoggle()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+               
+                <ul class="sidebar-menue">
+                <li onclick="profile()" class="Dashboard" style="border-bottom: 1px solid #FFF;">
+                    <div style="font-size: 25px; text-align: center;"><i class="fa fa-user-circle" aria-hidden="true"></i></div>
+                    <div id="userContent" class="text-center">Your Name<br>ID: 001</div>
+                </li>
+                <li onclick="addMember('<%=allredylogin%>')" class="Recharge">
+                    <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                      <i class="fa fa-cubes" aria-hidden="true"></i>
+                        <span>Add Member</span>
+                    </a>
+                    
+                  </li>
+
+
+                <li onclick="myTree('<%=allredylogin%>',1)" class="Recharge">
+                  <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fa fa-cubes" aria-hidden="true"></i>
+                      <span>My Level</span>
+                  </a>
+                  
+                </li>
+
+                <li onclick="createRefLink('<%=allredylogin%>')" class="Recharge">
+                    <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                      <i class="fa fa-cubes" aria-hidden="true"></i>
+                        <span>Refaral Link</span>
+                    </a>
+                    
+                  </li>
+                
+                <li onclick="selfTradeInit- ('<%=allredylogin%>')" class="selftrade">
+                    <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fa fa-money" aria-hidden="true"></i>
+                        <span>Self-Trade</span>
+                    </a>
+                  </li>
+                  <li   class="Myrides">
+                    <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fa fa-taxi" aria-hidden="true"></i>
+                        <span>Ledger</span>
+                    </a>
+                  </li>
+                  <li class="freekm"><a href="#">                
+                    <i class="fa fa-gift" aria-hidden="true"></i>
+                      <span>Transaction Details</span>
+                      </a>
+                  </li>
+                  <li class="Notification"><a href="#">                
+                    <i class="fa fa-bell" aria-hidden="true"></i>
+                      <span>Notification</span>
+                      </a>
+                  </li>
+                  <li  class="Notification"><a href="#">                
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                      <span>Support</span>
+                      </a>
+                  </li>
+                <li onclick="logout()" class="Logout">
+                    <a href="#">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                         <span> Logout</span>
+                        </a>
+                </li>
+                </ul>
+            </div>
+            <div id="main-content">
+                <div class="container-fluid">
+                    <div id="userProfile" class="row">
+                    </div>
+                    <div id="refLink" style="display: none;">
+            
+                    </div>
+
+                    <div id="other" style="display: nonen;">
+                    
+                    </div>
+
+                   
+
+                        <div id="mytree" style="display: none;" class="panel panel-info">
+                              <div class="panel-heading">
+                                    <h3 class="panel-title">Employee Tree</h3>
+                              </div>
+                              <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <ul id="treeHead" class="list-group">
+                                            <li class="list-group-item active">
+                                                <span class="badge">100</span>
+                                                Your Name
+                         
+                                                <li class="list-group-item">\
+                                                   
+                                                  
+                                                   
+                                                </li>
+                                            </li>
+                                        </ul>
+                                        <ul id="treeList" class="list-group col-xs-12" style="height: 50vh; overflow-y: auto;" >
+                                            <!-- <li onclick="myChildTree(10)" style="cursor: pointer;" class="list-group-item">Ankush Kar ID - 10 <br>Ads:</li>
+                                            <li onclick="myChildTree(10)" style="cursor: pointer;" class="list-group-item">Ankush Kar ID - 10</li>
+                                            <li onclick="myChildTree(10)" style="cursor: pointer;" class="list-group-item">Ankush Kar ID - 10</li>
+                                            <li onclick="myChildTree(10)" style="cursor: pointer;" class="list-group-item">Ankush Kar ID - 10</li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                               </div>
+                        </div>
+
+                        
+                </div>
+                        
+                    
+
+            </div>
+            </div>
+            
+        </div>
+        <!-- User Pannel End -->
+        </div>
+
+
+
+     
+
+       
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+
+
+
+

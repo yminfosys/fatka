@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     bankAccount:String,
     bankIfsc:String,
     bnakBranch:String,
-    c:String,
+    userType:String,
     regdate: { type: Date, default: Date.now },
     lastlogin: { type: Date}
 });
@@ -73,7 +73,11 @@ const fundrequestSchema = new mongoose.Schema({
     fundtransferpicture:String,
     upiID:String,
     upiName:String,
-    daterequest: { type: Date, default: Date.now }
+    daterequest: { type: Date, default: Date.now },
+    principalPaid:String,
+    interestPaid:String,
+    maturity:String,
+    maturitydate: { type: Date }
 });
 
 var fundrequestmodul = mongoose.model('moneyfundrequests', fundrequestSchema);
@@ -109,18 +113,20 @@ const userLavelLedgerSchema = new mongoose.Schema({
     address:String,
     lavel:String,
     lavelEarning:String,
+    lavelInvestment:String,
     paidEarninyStatus:String,
     paymentScrnSort:String,
     paydate: { type: Date },
+    date: { type: Date, default: Date.now },
 
-    investNumber:String,
-    investDate:{ type: Date },
-    investAmount:String,
+    // investNumber:String,
+    // investDate:{ type: Date },
+    // investAmount:String,
 
-    principalPaid:String,
-    interestPaid:String,
-    maturity:String,
-    maturitydate: { type: Date }
+    // principalPaid:String,
+    // interestPaid:String,
+    // maturity:String,
+    // maturitydate: { type: Date }
 
 
 

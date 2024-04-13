@@ -9,6 +9,10 @@ var dotenv=require('dotenv').config();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+
+var componant = require('../component/lavelpayment');
+const { payment } = require('../component/lavelpayment');
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('admin/myadmin', { title: 'Express' });
@@ -146,6 +150,7 @@ router.post('/addupi', async function(req, res, next) {
       upiid:req.body.upiid,
       upiName:req.body.upiname,
       upilimit:req.body.upilimit,
+      useamount:"0",
       balanceamount:req.body.upilimit,
       upistatus:"new"
     })
@@ -238,13 +243,48 @@ router.post('/fundrequest', async function(req, res, next) {
 });
 
 
-
 router.post('/acceptFund', async function(req, res, next) {
   try {
+    //Active
     await dbCon.connectDB();
     const fund= await db.fundrequest.findOne({refno:req.body.refno});
     const user= await db.user.findOne({userID:fund.userID});
-    
+
+    let lavelrootID = user.rootID;
+    const myArray= lavelrootID.split("-");
+    var rootID="";
+    var L=myArray.length;
+    for(i=1; i < myArray.length; i++) {
+      if(rootID){
+        rootID=''+rootID+'-'+myArray[i-1]+'';
+      }else{
+        rootID=''+myArray[i-1]+'';
+      }
+      L=L-1;
+      const payme= await payment(L,fund.usdt); 
+          // /////// Lavel input////// /////  
+          const Lavel= await db.lavelLedger.findOne({rootID:rootID,lavelrootID:lavelrootID,lavel:L});
+          if(!Lavel){
+            const newlavel= await db.lavelLedger({
+                      userName:req.body.regUserName,
+                      userID:user.userID,
+                      rootID:rootID,
+                      lavelrootID:lavelrootID,
+                      address:req.body.regAddress,
+                      lavel:L,
+                      lavelEarning:payme,
+                      lavelInvestment:fund.usdt,
+                      paidEarninyStatus:"Due",
+                    })
+                    await newlavel.save();
+                  }
+  }
+  const usereee= await db.user.findOneAndUpdate({userID:fund.userID},{$set:{userType:"Active"}});
+  const fundreee= await db.fundrequest.findOneAndUpdate({refno:req.body.refno},{$set:{
+    fundrequestStatus:"Accept",
+    principalPaid:"0",
+    interestPaid:"0"
+  }});
   
   await dbCon.closeDB();
   res.json(fund);
@@ -253,6 +293,31 @@ router.post('/acceptFund', async function(req, res, next) {
     return error;
   }
 });
+
+
+// userID: '2',
+// accounttype: 'New',
+// inr: '9002',
+// usdt: '100',
+// utrno: '456754432346',
+// refno: '1712997444193',
+// fundrequestStatus: 'Request',
+// upiID: 'safsd@tyt',
+// upiName: 'Karnolmokuj',
+// daterequest: 2024-04-13T08:37:24.249Z,
+// __v: 0
+// } {
+// _id: new ObjectId("66102a6098bb5be63cf16d39"),
+// userName: 'Krishna  Swansi',
+// userID: 2,
+// rootID: 'A-1',
+// password: '$2b$10$Uhys/QI4yX1jBsNKG/rCauHm5c9q8bM1hHKzPHSF0mV957GP10PWa',
+// email: 'abc@abc.com',
+// address: 'hfhgfj yft ytyu',
+// mobile: '1234563421',
+// regdate: 2024-04-05T16:44:16.465Z,
+// __v: 0
+// }
 
 
 // router.post('/oldUserDetails', async function(req, res, next) {

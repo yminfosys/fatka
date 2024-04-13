@@ -195,8 +195,7 @@ router.post('/addfund', async function(req, res, next) {
   const upi= await db.upiidlist.findOne({upiid:req.body.upiid});
   console.log(user)
   const fundrequest= await db.fundrequest({
-        //userName:user.userName,
-        userName:"khujkh jkhuih",
+        userName:user.userName,
         userID:req.body.userID,
         accounttype:req.body.accounttype,
         inr:req.body.inr,
@@ -301,10 +300,11 @@ var payment = async function(inp){
         
         
     }
-    return day;
+    return {day:day};
   
   
 }
+
 
 
 // async function tt(){

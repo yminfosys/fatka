@@ -188,12 +188,18 @@ function fundRequest(){
 
 function acceptFund(refno){
     $.post('/admin/acceptFund',{refno:refno},function(data){
-        console.log(data)
+       if(data){
+        fundRequest();
+       }
     })
 }
 
 function rejectFund(refno){
-
+    $.post('/admin/rejectFund',{refno:refno},function(data){
+        if(data){
+         fundRequest();
+        }
+     })
 }
 
 function addupiinit(){

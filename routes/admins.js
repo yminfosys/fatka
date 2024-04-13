@@ -287,11 +287,30 @@ router.post('/acceptFund', async function(req, res, next) {
   }});
   
   await dbCon.closeDB();
-  res.json(fund);
+  res.send("ok");
   }catch (error) {
     console.log(error);
     return error;
   }
+});
+
+router.post('/rejectFund', async function(req, res, next) {
+ 
+  try {
+    await dbCon.connectDB();
+    const fundreee= await db.fundrequest.findOneAndUpdate({refno:req.body.refno},{$set:{
+      fundrequestStatus:"Reject",
+      principalPaid:"0",
+      interestPaid:"0"
+    }});
+  
+  await dbCon.closeDB();
+  res.send("ok");
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+  
 });
 
 

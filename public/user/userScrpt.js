@@ -543,15 +543,17 @@ function searchdown(){
             </div>\
         </div>\
     </div>');
-    totalearning();
-    viewmenu();
-    viewwallet();
-    viewfooter();
+    totalearning(user.userID);
+    viewmenu(user.userID);
+    viewwallet(user.userID);
+    viewfooter(user.userID);
 
   }
 
   function profile(){
     $.post('/user/userProfile',{},function(user){
+        var conte='https://richrova.co.uk/user?refrootID='+user.rootID+'&refid='+user.userID+'&refname='+user.userName+'';
+        conte=encodeURI(conte);
         $("#profile").css({"display":"block"});
         $("#profile").html('\
         <ul class="list-group">\
@@ -561,6 +563,7 @@ function searchdown(){
             <li class="list-group-item">Email : '+user.email+'</li>\
             <li class="list-group-item">Mobile : '+user.mobile+'</li>\
             <li class="list-group-item">Address : '+user.address+'</li>\
+            <li class="list-group-item"><strong>Copy Ref-Link</strong> :'+conte+'  <span onclick="copyContent(\''+conte+'\')" style="margin-left: 20px;"><i class="fa fa-clone" aria-hidden="true"></i></span></li>\
             <li class="list-group-item">\
                 <a  onclick="editbankinit('+user.userID+')" id="editBankBtn" class="btn btn-xs btn-primary">Add Payment Details</a>\
                 <a  onclick="changePasswordinit('+user.userID+')" id="newPaswBtn" class="btn btn-xs btn-primary">Change Password</a>\
@@ -568,8 +571,17 @@ function searchdown(){
                 <p id="changePasw"></p>\
             </li>\
         </ul>');
-    });      
+    });
+
+    
+
   }
+
+  function copyContent(content){
+    alert(content)
+    navigator.clipboard.writeText(content);
+  }
+
   function closeprofile(){
     $("#profile").css({"display":"none"});
     $("#profile").html("");
@@ -677,14 +689,14 @@ function searchdown(){
   function totalearning(){
     $("#totalearning").html('\
     <p>TOTAL EARNING</p>\
-    <p>RS. 2398</p>')
+    <p>RS. 0.00</p>')
   }
 
-  function viewmenu(){
+  function viewmenu(userID){
     $("#viewmenu").html('<ul class="list-group">\
     <li class="list-group-item col-xs-12 col-sm-12">\
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-            <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <div onclick="accountActivation(\''+userID+'\',\'Old\')" style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
                 <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-plus-square" aria-hidden="true"></i></button>\
                 <p style="font-size: xx-small;">Add Fund</p>\
             </div>\
@@ -730,7 +742,7 @@ function searchdown(){
             </div>\
         </div>\
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-            <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <div onclick="addMember('+userID+')" style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
                 <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-user-md" aria-hidden="true"></i></button>\
                 <p style="font-size: xx-small;">Add Member</p>\
             </div>\
@@ -741,47 +753,79 @@ function searchdown(){
                 <p style="font-size: xx-small;">Enquiry</p>\
             </div>\
         </div>\
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
+        <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i></button>\
+            <p style="font-size: xx-small;">Enquiry</p>\
+        </div>\
+    </div>\
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
+    <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+        <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i></button>\
+        <p style="font-size: xx-small;">Enquiry</p>\
+    </div>\
+</div>\
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
+<div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+    <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-question-circle" aria-hidden="true"></i></button>\
+    <p style="font-size: xx-small;">Enquiry</p>\
+</div>\
+</div>\
     </li>\
 </ul>');
   }
 
-  function viewwallet(){
-    $("#viewwallet").html('<ul class="list-group">\
-    <li class="list-group-item col-xs-12 col-sm-12">\
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-            <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                <p style="font-size: xx-small;">Comission: 0.00 USDT</p>\
-                <p style="font-size: xx-small;">Salary: 0.00 USDT</p>\
-                <p style="font-size: xx-small;">Performence Bonus</p>\
-            </div>\
-        </div>  \
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-            <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                <p style="font-size: xx-small;">Interest: 0.00 USDT</p>\
-                <p style="font-size: xx-small;">Pricipal: 0.00 USDT</p>\
-                <p style="font-size: xx-small;">Profit Shareing</p>\
-            </div>\
-        </div> \
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-            <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                <img style="width: 30px" src="/images/other/tether-usdt-logo.png" alt="">\
-                <p>0.00 USDT </p>\
-                <p style="font-size: xx-small;">Fund Invent</p>\
-            </div>\
-        </div> \
-    </li>\
-    <li class="list-group-item col-xs-12 col-sm-12">\
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-            <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                <p style="font-size: large;">E-Wallet</p>\
-                <p style="font-size: large;">Total Amount</p>\
-                <p style="font-size: large;">0.00 USDT</p>\
-            </div>\
-        </div> \
-        <p style="font-size: xx-small;">NB:<br>1. Admin charge 5% will be deducted every Withdrawal<br>\
-        2. Minimum Withdrawal Limit is 10 USDT</p>\
-    </li>\
-</ul>')
+  function viewwallet(userID){
+   // alert(userID)
+    $.post('/user/getWallets',{userID:userID},function(fund){
+        //console.log(fund)
+        var invetment=0;
+        if(fund.length >0){
+            fund.forEach(val => {
+                invetment=Number(invetment)+ Number(val.usdt);
+            });
+        }
+
+        $("#viewwallet").html('<ul class="list-group">\
+        <li class="list-group-item col-xs-12 col-sm-12">\
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+                <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
+                    <p style="font-size: xx-small;">Comission: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Salary: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Performence Bonus</p>\
+                </div>\
+            </div>  \
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+                <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
+                    <p style="font-size: xx-small;">Interest: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Pricipal: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Profit Shareing</p>\
+                </div>\
+            </div> \
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+                <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
+                    <img style="width: 30px" src="/images/other/tether-usdt-logo.png" alt="">\
+                    <p>'+invetment+' USDT </p>\
+                    <p style="font-size: xx-small;">Fund Investment</p>\
+                </div>\
+            </div> \
+        </li>\
+        <li class="list-group-item col-xs-12 col-sm-12">\
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
+                <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
+                    <p style="font-size: large;">E-Wallet</p>\
+                    <p style="font-size: large;">Total Amount</p>\
+                    <p style="font-size: large;">0.00 USDT</p>\
+                </div>\
+            </div> \
+            <p style="font-size: xx-small;">NB:<br>1. Admin charge 5% will be deducted every Withdrawal<br>\
+            2. Minimum Withdrawal Limit is 10 USDT</p>\
+        </li>\
+    </ul>')
+
+    })
+
+   
   }
 
   function viewfooter(){
@@ -932,28 +976,27 @@ function searchdown(){
 
   }
 
-  function createRefLink(id){
-    $.post('/user/createRefLink',{id:id},function(data){
+//   function createRefLink(id){
+//     $.post('/user/createRefLink',{id:id},function(data){
 
+//         var conte='https://richrova.co.uk/user?refrootID='+data.rootID+'&refid='+data.userID+'&refname='+data.userName+'';
+        
+//          conte=encodeURI(conte);
 
-        var conte='https://moneyremid.com/user?refrootID='+data.rootID+'&refid='+data.userID+'&refname='+data.userName+'';
-        console.log(conte);
-        conte=encodeURI(conte);
+//         // $("#refLink").css({"display":"block"})
 
-        $("#refLink").css({"display":"block"})
-
-        $("#other").css({"display":"none"})
-        $("#mytree").css({"display":"none"})
-        navigator.clipboard.writeText(conte);
+//         // $("#other").css({"display":"none"})
+//         // $("#mytree").css({"display":"none"})
+//         navigator.clipboard.writeText(conte);
         
 
-        $("#refLink").html('<div class="alert alert-info">\
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
-        <strong>Copy This Link </strong>'+conte+'\
-    </div>')
-    })
+//         $("#refLink").html('<div class="alert alert-info">\
+//         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+//         <strong>Copy This Link </strong>'+conte+'\
+//     </div>')
+//     })
 
-  }
+//   }
 
   function selfTradeInit(id){
     

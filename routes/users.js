@@ -222,88 +222,102 @@ router.post('/addfund', async function(req, res, next) {
 })
 
 
-var payment = async function(inp){
-  let day
+router.post('/getWallets', async function(req, res, next) {
+  try {
+    await dbCon.connectDB();
+    const fund= await db.fundrequest.find({userID:req.body.userID,fundrequestStatus:"Accept"});
+    await dbCon.closeDB();
+    res.json(fund);
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
   
-    switch (inp) {
+});
+
+
+// var payment = async function(inp){
+//   let day
+  
+//     switch (inp) {
     
-      case 1:
-        day = 800;
-        break;
-      case 2:
-        day = 400;
-        break;
-      case 3:
-        day = 250;
-        break;
-      case 4:
-        day = 150;
-        break;
-      case 5:
-        day = 100;
-        break;
-      case 6:
-        day = 75;
-        break;
-      case 7:
-        day = 50;
-        break;
-      case 8:
-        day = 30;
-        break;
-      case 9:
-        day = 25;
-        break;
-      case 10:
-        day = 20;
-        break;
-      case 11:
-        day = 1;
+//       case 1:
+//         day = 800;
+//         break;
+//       case 2:
+//         day = 400;
+//         break;
+//       case 3:
+//         day = 250;
+//         break;
+//       case 4:
+//         day = 150;
+//         break;
+//       case 5:
+//         day = 100;
+//         break;
+//       case 6:
+//         day = 75;
+//         break;
+//       case 7:
+//         day = 50;
+//         break;
+//       case 8:
+//         day = 30;
+//         break;
+//       case 9:
+//         day = 25;
+//         break;
+//       case 10:
+//         day = 20;
+//         break;
+//       case 11:
+//         day = 1;
 
-        break;
-      case 12:
-        day = 1;
+//         break;
+//       case 12:
+//         day = 1;
 
-        break;
-      case 13:
-        day = 1;
-
-
-        break;
-      case 14:
-        day = 1;
-
-        break;
-      case 15:
-        day = 1;
-
-        break;
-      case 16:
-        day = 0.5;
-
-        break;
-      case 17:
-        day = 0.5;
-
-        break;
-      case 18:
-        day = 0.5;
+//         break;
+//       case 13:
+//         day = 1;
 
 
-        break;
-      case 19:
-        day = 0.5;
+//         break;
+//       case 14:
+//         day = 1;
 
-        break;
-      case 20:
-        day = 0.5;
+//         break;
+//       case 15:
+//         day = 1;
+
+//         break;
+//       case 16:
+//         day = 0.5;
+
+//         break;
+//       case 17:
+//         day = 0.5;
+
+//         break;
+//       case 18:
+//         day = 0.5;
+
+
+//         break;
+//       case 19:
+//         day = 0.5;
+
+//         break;
+//       case 20:
+//         day = 0.5;
         
         
-    }
-    return {day:day};
+//     }
+//     return {day:day};
   
   
-}
+// }
 
 
 

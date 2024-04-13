@@ -2,7 +2,7 @@ body { padding-top: 50px;background-color: rgb(190, 183, 183); }
 .navbar-nav > li > .dropdown-menu { background-color: #facb3d;  }
 .navbar-nav > li > .dropdown-menu li a{ color: rgb(43, 2, 2);}
 .navbar-def {
-    background-color: #facb3d;
+    background-color: #070603;
     border-color: rgb(43, 2, 2);
 }
 /* Title */
@@ -16,7 +16,7 @@ body { padding-top: 50px;background-color: rgb(190, 183, 183); }
 }
 /* Link */
 .navbar-def .navbar-nav > li > a {
-    color: rgb(24, 2, 2);
+    color: rgb(171, 203, 65);
 }
 .navbar-def .navbar-nav > li > a:hover,
 .navbar-def .navbar-nav > li > a:focus {

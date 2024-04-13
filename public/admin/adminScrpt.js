@@ -411,18 +411,19 @@ function addusdtrate(){
 // }
 
 
-// function setStartUserid(){
-//     var id=window.prompt();
-//     if(id){
-//          $.post('/admin/SetUserID',{id:id},function(data){
-//                 if(data){
-//                     alert("Set Start User ID UserID to"+ data);
-//                 }
-//             })
-//     }
+function setStartUserid(){
+    var id=window.prompt();
+    if(id){
+         $.post('/admin/SetUserID',{id:id},function(data){
+                if(data){
+                    alert("Set Start User ID UserID to"+ data);
+                }
+            })
+    }
    
     
-// }
+ }
+ 
 // function forgetpasswordInit(){
 //     $("#forgetpassword").css({"display":"block"});
 //     $("#forgetpassword").html('<div  class="col-xs-12 col-sm-12">\

@@ -4,6 +4,7 @@ $( document ).ready(function() {
     var sponsRootID=$("#sponsRootID").val();
     var sponsID=$("#sponsID").val();
     var sponsName=$("#sponsName").val();
+
     
     if(allredyloginuserID){
         $("#dashHome").css({"display":"block"});
@@ -248,7 +249,7 @@ function searchdown(){
         //////Create Column No. ///////
         $.post('/user/creatregColumn',{SponsorRootID:SponsorRootID},function(column){
             //console.log(data);
-            //alert(column.length)
+            alert(column.length)
             regColumn=column.length+1
                ////Create Root//////
                var channelRoot=''+SponsorRootID+'-'+regColumn+'';

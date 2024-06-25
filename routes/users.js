@@ -16,6 +16,7 @@ const saltRounds = 10;
 
 
 
+
 /* GET users listing. */
 
 router.post('/test', async function(req, res, next) {
@@ -139,6 +140,7 @@ router.post('/checkSponsor', async function(req, res, next) {
 
 
 router.post('/creatregColumn', async function(req, res, next) {
+  console.log(req.body)
   try {
     await dbCon.connectDB();
     const user= await db.lavelLedger.find({rootID:req.body.SponsorRootID,lavel:1} );

@@ -249,7 +249,7 @@ function searchdown(){
         //////Create Column No. ///////
         $.post('/user/creatregColumn',{SponsorRootID:SponsorRootID},function(column){
             //console.log(data);
-            alert(column.length)
+            //alert(column.length)
             regColumn=column.length+1
                ////Create Root//////
                var channelRoot=''+SponsorRootID+'-'+regColumn+'';

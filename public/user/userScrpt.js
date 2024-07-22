@@ -782,7 +782,7 @@ function searchdown(){
         $("#levelView").html('<div class="panel panel-info">\
             <div class="panel-heading">\
             <span  onclick="closeLevelview()" style="color:red; float:right;" class="badge">X</span>\
-              <h3 class="panel-title">Lavel View Summary</h3>\
+              <h3 class="panel-title">Level View Summary</h3>\
             </div>\
             <div class="panel-body">\
               <div class="table-responsive">\
@@ -803,7 +803,7 @@ function searchdown(){
             </div>\
         </div>');
         for(var l=1; l<= 10; l++){
-            console.log(l)
+           // console.log(l)
           await  $.post('/user/levelview',{userID:userID, level:l},function(data){
             //console.log(data)
             if(data.member!=0){
@@ -813,7 +813,7 @@ function searchdown(){
                       <td>'+data.totalBusiness+'</td>\
                       <td>'+data.totalearning+'</td>\
                       <td>\
-                      <button type="button" class="btn btn-success btn-xs">View</button>\
+                      <button onclick="directlevelview(\''+userID+'\',\''+l+'\')" type="button" class="btn btn-success btn-xs">View</button>\
                       </td>\
                     </tr>');
             }
@@ -832,7 +832,7 @@ function searchdown(){
         $("#levelView").html('<div class="panel panel-info">\
             <div class="panel-heading">\
             <span  onclick="closeLevelview()" style="color:red; float:right;" class="badge">X</span>\
-              <h3 class="panel-title">Lavel '+level+' View</h3>\
+              <h3 class="panel-title">Level '+level+' View</h3>\
             </div>\
             <div class="panel-body">\
               <div class="table-responsive">\
@@ -840,7 +840,7 @@ function searchdown(){
                   <thead>\
                     <tr>\
                       <th>ID</th>\
-                      <th>Joinung Date</th>\
+                      <th>Joining Date</th>\
                       <th>View</th>\
                     </tr>\
                   </thead>\
@@ -857,12 +857,18 @@ function searchdown(){
                 <td>RR-'+val.userID+'</td>\
                 <td>'+val.date+'</td>\
                 <td>\
-                <button onclick="showusername()" type="button" class="btn btn-success btn-xs">View</button>\
+                <button onclick="showusername(\''+val.userID+'\')" type="button" class="btn btn-success btn-xs">View</button>\
                 </td>\
               </tr>');
         })
       } 
     });
+   }
+
+   function showusername(userID){
+    $.post('/user/getUserView',{userID:userID},function(user){
+        alert(user.userName)
+    })
    }
 
   function viewwallet(userID){

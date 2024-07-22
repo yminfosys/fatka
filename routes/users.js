@@ -574,7 +574,18 @@ router.post('/directlevelview', async function(req, res, next) {
   }
 });
 
-
+router.post('/getUserView', async function(req, res, next) {
+  try {
+    await dbCon.connectDB();
+    const user= await db.user.findOne({userID:req.body.userID})
+    await dbCon.closeDB();
+    res.json(user)
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+  
+});
 
 
 

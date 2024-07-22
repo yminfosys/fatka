@@ -10,6 +10,8 @@ var usersRouter = require('./routes/users');
 var adminsRouter = require('./routes/admins');
 var accountantRouter = require('./routes/accountant');
 
+var agentRouter = require('./routes/agent');
+
 var app = express();
 
 
@@ -17,7 +19,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // view engine setup
-app.set('views', [path.join(__dirname, 'views'),path.join(__dirname, 'views/admin'),path.join(__dirname, 'views/driver'),path.join(__dirname, 'views/user')]);
+app.set('views', [path.join(__dirname, 'views'),path.join(__dirname, 'views/admin'),path.join(__dirname, 'views/agent'),path.join(__dirname, 'views/user')]);
 app.set('view engine', 'ejs');
 
 
@@ -34,8 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
-app.use('/driver', accountantRouter);
 app.use('/admin', adminsRouter);
+app.use('/agent', agentRouter);
+
 
 
 

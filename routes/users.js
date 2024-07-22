@@ -17,6 +17,7 @@ const saltRounds = 10;
 
 
 
+
 /* GET users listing. */
 
 router.post('/test', async function(req, res, next) {
@@ -60,6 +61,7 @@ router.get('/', async function(req, res, next) {
   }
   
 });
+
 
 
 router.post('/loginUser', async function(req, res, next) {
@@ -236,6 +238,8 @@ router.post('/getWallets', async function(req, res, next) {
   }
   
 });
+
+
 
 
 // var payment = async function(inp){
@@ -531,6 +535,50 @@ router.post('/userProfile', async function(req, res, next) {
 });
 
 
+router.post('/levelview', async function(req, res, next) {
+  try {
+    console.log(req.body);
+    await dbCon.connectDB();
+    const user= await db.user.findOne({userID:req.body.userID})
+    const member= await db.lavelLedger.find({rootID:user.rootID,lavel:req.body.level})
+    //console.log(member);
+    var totalearning=0;
+    var totalBusiness=0;
+    if(member.length > 0){
+     member.forEach(val => {
+      totalearning=Number(totalearning)+Number(val.lavelEarning);
+      totalBusiness=Number(totalBusiness)+Number(val.lavelInvestment);
+      });
+    }
+
+    await dbCon.closeDB();
+    
+    res.json({level:req.body.level,member:member.length,totalearning:Number(totalearning),totalBusiness:Number(totalBusiness)})
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+});
+
+router.post('/directlevelview', async function(req, res, next) {
+  try {
+    console.log(req.body);
+    await dbCon.connectDB();
+    const user= await db.user.findOne({userID:req.body.userID});
+    const member= await db.lavelLedger.find({rootID:user.rootID,lavel:req.body.level});
+    await dbCon.closeDB();
+    res.json(member);
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+});
+
+
+
+
+
+
 
 ////////Profile/////////////
 router.post('/logout', async function(req, res, next) {
@@ -638,7 +686,7 @@ router.post('/getTree', async function(req, res, next) {
 
 
 
-////////REf Link/////////////
+////////Ref Link/////////////
 router.post('/createRefLink', async function(req, res, next) {
   try {
     await dbCon.connectDB();

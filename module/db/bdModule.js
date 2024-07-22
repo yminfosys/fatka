@@ -5,6 +5,7 @@ const counterSchema = new mongoose.Schema({
     value:Number
 });
 
+
 var countermodul = mongoose.model('moneycounters', counterSchema);
 
 const userSchema = new mongoose.Schema({ 
@@ -112,13 +113,12 @@ const userLavelLedgerSchema = new mongoose.Schema({
     lavelrootID:String,
     address:String,
     lavel:String,
-    lavelEarning:String,
-    lavelInvestment:String,
+    lavelEarning:Number,
+    lavelInvestment:Number,
     paidEarninyStatus:String,
     paymentScrnSort:String,
     paydate: { type: Date },
-    date: { type: Date, default: Date.now },
-
+    date: { type: Date, default: Date.now }
     // investNumber:String,
     // investDate:{ type: Date },
     // investAmount:String,
@@ -127,9 +127,6 @@ const userLavelLedgerSchema = new mongoose.Schema({
     // interestPaid:String,
     // maturity:String,
     // maturitydate: { type: Date }
-
-
-
 });
 var userLavelLedgermodul = mongoose.model('moneyuserlavelledger', userLavelLedgerSchema);
 

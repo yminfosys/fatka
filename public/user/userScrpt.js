@@ -14,6 +14,7 @@ $( document ).ready(function() {
         $("#regit").css({"display":"none"});
 
         getUserprofile(allredyloginuserID);
+
     }else{
 
         if(sponsRootID && sponsID && sponsName){
@@ -253,8 +254,6 @@ function searchdown(){
             regColumn=column.length+1
                ////Create Root//////
                var channelRoot=''+SponsorRootID+'-'+regColumn+'';
-
-
                $.post('/user/checkuserexist',{channelRoot:channelRoot,regEmail:regEmail},function(data){
                  if(!data){
                   /////////Save New Partner//////
@@ -461,7 +460,7 @@ function searchdown(){
   }
 
   function procedwith(userID,accounttype,inr,usdt,upiid,usdtRate){
-    console.log("Proced with",userID,accounttype,inr,usdt,upiid,usdtRate)
+    //console.log("Proced with",userID,accounttype,inr,usdt,upiid,usdtRate)
     $("#selectUsdt").css({"display":"none"});
     $("#payDetails").css({"display":"block"});
     $("#payDetails").html('<div class="thumbnail">\
@@ -525,7 +524,7 @@ function searchdown(){
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
                         <div onclick="profile('+user.userID+')">\
                             <div style="font-size: 25px; text-align: center;"><i class="fa fa-user-circle" aria-hidden="true"></i></div>\
-                            <div id="userContent" class="text-center">'+user.userName+'<br>ID: FB-'+user.userID+'</div>\
+                            <div id="userContent" class="text-center">'+user.userName+'<br>ID: RR-'+user.userID+'</div>\
                         </div>\
                     </div>\
                 </div>\
@@ -535,6 +534,8 @@ function searchdown(){
     <div style="height: 10vh; margin-top: 1vh;" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
         <div class="row">\
             <div id="profile" style="display: none;" class="col-xs-12 col-sm-12" >\
+            </div>\
+            <div id="levelView" style="display: none;" class="col-xs-12 col-sm-12" >\
             </div>\
             <div id="viewmenu" class="col-xs-12 col-sm-12">\
             </div>\
@@ -731,13 +732,13 @@ function searchdown(){
         </div>\
                 \
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-            <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <div onclick="directlevelview(\''+userID+'\',1)"  style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
                 <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-sitemap" aria-hidden="true"></i></button>\
                 <p style="font-size: xx-small;">Direct Refferal</p>\
             </div>\
         </div>\
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-            <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <div onclick="levelView(\''+userID+'\')" style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
                 <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-level-down" aria-hidden="true"></i><i class="fa fa-level-up" aria-hidden="true"></i></button>\
                 <p style="font-size: xx-small;">Level View</p>\
             </div>\
@@ -775,6 +776,94 @@ function searchdown(){
     </li>\
 </ul>');
   }
+
+    async function levelView(userID){
+        $("#levelView").css({"display":"block"});
+        $("#levelView").html('<div class="panel panel-info">\
+            <div class="panel-heading">\
+            <span  onclick="closeLevelview()" style="color:red; float:right;" class="badge">X</span>\
+              <h3 class="panel-title">Lavel View Summary</h3>\
+            </div>\
+            <div class="panel-body">\
+              <div class="table-responsive">\
+                <table class="table table-hover">\
+                  <thead>\
+                    <tr>\
+                      <th>Level</th>\
+                      <th>Members</th>\
+                      <th>Business</th>\
+                      <th>Income</th>\
+                      <th>View</th>\
+                    </tr>\
+                  </thead>\
+                  <tbody id="levellist">\
+                  </tbody>\
+                </table>\
+              </div>\
+            </div>\
+        </div>');
+        for(var l=1; l<= 10; l++){
+            console.log(l)
+          await  $.post('/user/levelview',{userID:userID, level:l},function(data){
+            //console.log(data)
+            if(data.member!=0){
+                $("#levellist").append('<tr>\
+                      <td>'+data.level+'</td>\
+                      <td>'+data.member+'</td>\
+                      <td>'+data.totalBusiness+'</td>\
+                      <td>'+data.totalearning+'</td>\
+                      <td>\
+                      <button type="button" class="btn btn-success btn-xs">View</button>\
+                      </td>\
+                    </tr>');
+            }
+            })
+          }
+
+    }
+
+   function closeLevelview(){
+    $("#levelView").css({"display":"none"});
+    $("#levelView").html("");
+   } 
+
+   function directlevelview(userID,level){
+    $("#levelView").css({"display":"block"});
+        $("#levelView").html('<div class="panel panel-info">\
+            <div class="panel-heading">\
+            <span  onclick="closeLevelview()" style="color:red; float:right;" class="badge">X</span>\
+              <h3 class="panel-title">Lavel '+level+' View</h3>\
+            </div>\
+            <div class="panel-body">\
+              <div class="table-responsive">\
+                <table class="table table-hover">\
+                  <thead>\
+                    <tr>\
+                      <th>ID</th>\
+                      <th>Joinung Date</th>\
+                      <th>View</th>\
+                    </tr>\
+                  </thead>\
+                  <tbody id="levellist">\
+                  </tbody>\
+                </table>\
+              </div>\
+            </div>\
+        </div>');
+    $.post('/user/directlevelview',{userID:userID, level:level},function(data){
+      if(data.length >0) {
+        data.forEach(val => {
+            $("#levellist").append('<tr>\
+                <td>RR-'+val.userID+'</td>\
+                <td>'+val.date+'</td>\
+                <td>\
+                <button onclick="showusername()" type="button" class="btn btn-success btn-xs">View</button>\
+                </td>\
+              </tr>');
+        })
+      } 
+    });
+   }
 
   function viewwallet(userID){
    // alert(userID)
@@ -923,178 +1012,178 @@ function searchdown(){
 //     });
 //   }
 
-  function callLavelTree(id){
-    var lavel=$("#yourlavel").val();
-    myTree(id,lavel);
-  }
+//   function callLavelTree(id){
+//     var lavel=$("#yourlavel").val();
+//     myTree(id,lavel);
+//   }
 
-  function activeThisUser(id){
-    $("#ActivateThisUser").css({"display":"block"});
-    $("#ActivateThisUser").html('<div  style="margin-top:3vh; height:101vh" class="row">\
-    <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">\
-        <div class="panel panel-success">\
-            <input type="hidden"  id="activeUserID" value="'+id+'">\
-              <div class="panel-heading">\
-                    <h3 class="panel-title">Complete this to Activate </h3>\
-              </div>\
-                <div class="form-group">\
-                    <label>Western Union ID</label>\
-                        <input type="text"  id="wuID" class="form-control" >\
-                </div>\
-\
-                <div class="form-group">\
-                    <label>Western Union Password</label>\
-                        <input type="text"  id="wuPsd" class="form-control" >\
-                </div>\
-\
-                <div class="form-group">\
-                    <label>Binance ID</label>\
-                        <input type="text"  id="BinanceID" class="form-control" >\
-                </div>\
-\
-                <div class="form-group">\
-                    <label>Binance Password</label>\
-                        <input type="text"  id="BinancePsd" class="form-control" >\
-                </div>\
-\
-                <div class="form-group">\
-                    <label>Email ID</label>\
-                        <input type="text"  id="EmlID" class="form-control" >\
-                </div>\
-\
-                <div class="form-group">\
-                    <label>Email Password</label>\
-                        <input type="text"  id="EmlPsd" class="form-control" >\
-                </div>\
-                <div class="form-group">\
-                    <label>Bank Details</label> \
-                    <textarea  id="BankDelais" class="form-control" rows="3" placeholder="Name , A/c, IFSC, Bank Nane"></textarea>\
-                </div>\
-                <button onclick="completeReg()" type="button" class="btn btn-primary">Submit</button>\
-              </div>\
-        </div>  \
-    </div>')
-
-  }
-
-//   function createRefLink(id){
-//     $.post('/user/createRefLink',{id:id},function(data){
-
-//         var conte='https://richrova.co.uk/user?refrootID='+data.rootID+'&refid='+data.userID+'&refname='+data.userName+'';
-        
-//          conte=encodeURI(conte);
-
-//         // $("#refLink").css({"display":"block"})
-
-//         // $("#other").css({"display":"none"})
-//         // $("#mytree").css({"display":"none"})
-//         navigator.clipboard.writeText(conte);
-        
-
-//         $("#refLink").html('<div class="alert alert-info">\
-//         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
-//         <strong>Copy This Link </strong>'+conte+'\
+//   function activeThisUser(id){
+//     $("#ActivateThisUser").css({"display":"block"});
+//     $("#ActivateThisUser").html('<div  style="margin-top:3vh; height:101vh" class="row">\
+//     <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">\
+//         <div class="panel panel-success">\
+//             <input type="hidden"  id="activeUserID" value="'+id+'">\
+//               <div class="panel-heading">\
+//                     <h3 class="panel-title">Complete this to Activate </h3>\
+//               </div>\
+//                 <div class="form-group">\
+//                     <label>Western Union ID</label>\
+//                         <input type="text"  id="wuID" class="form-control" >\
+//                 </div>\
+// \
+//                 <div class="form-group">\
+//                     <label>Western Union Password</label>\
+//                         <input type="text"  id="wuPsd" class="form-control" >\
+//                 </div>\
+// \
+//                 <div class="form-group">\
+//                     <label>Binance ID</label>\
+//                         <input type="text"  id="BinanceID" class="form-control" >\
+//                 </div>\
+// \
+//                 <div class="form-group">\
+//                     <label>Binance Password</label>\
+//                         <input type="text"  id="BinancePsd" class="form-control" >\
+//                 </div>\
+// \
+//                 <div class="form-group">\
+//                     <label>Email ID</label>\
+//                         <input type="text"  id="EmlID" class="form-control" >\
+//                 </div>\
+// \
+//                 <div class="form-group">\
+//                     <label>Email Password</label>\
+//                         <input type="text"  id="EmlPsd" class="form-control" >\
+//                 </div>\
+//                 <div class="form-group">\
+//                     <label>Bank Details</label> \
+//                     <textarea  id="BankDelais" class="form-control" rows="3" placeholder="Name , A/c, IFSC, Bank Nane"></textarea>\
+//                 </div>\
+//                 <button onclick="completeReg()" type="button" class="btn btn-primary">Submit</button>\
+//               </div>\
+//         </div>  \
 //     </div>')
-//     })
 
 //   }
 
-  function selfTradeInit(id){
+// //   function createRefLink(id){
+// //     $.post('/user/createRefLink',{id:id},function(data){
+
+// //         var conte='https://richrova.co.uk/user?refrootID='+data.rootID+'&refid='+data.userID+'&refname='+data.userName+'';
+        
+// //          conte=encodeURI(conte);
+
+// //         // $("#refLink").css({"display":"block"})
+
+// //         // $("#other").css({"display":"none"})
+// //         // $("#mytree").css({"display":"none"})
+// //         navigator.clipboard.writeText(conte);
+        
+
+// //         $("#refLink").html('<div class="alert alert-info">\
+// //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+// //         <strong>Copy This Link </strong>'+conte+'\
+// //     </div>')
+// //     })
+
+// //   }
+
+//   function selfTradeInit(id){
     
-    $("#other").html('<div id="selftrade" style="display: non;" class="panel panel-info">\
-    <div class="panel-heading">\
-        <h3 class="panel-title">Today USDT Rate : 90.00 INR</h3>\
-    </div>\
-    <div class="panel-body">\
-    <div class="row">\
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-          <div class="form-group">\
-            <label for="inputtradeAmount" class="col-sm-3 control-label">Trade-Amount:</label>\
-            <div class="col-sm-4">\
-                <select onchange="usdtcalculetion()" id="inputtradeAmount" class="form-control">\
-                    <option value="0">Select Amount</option>\
-                    <option value="10000">10000</option>\
-                    <option value="25000">25000</option>\
-                    <option value="50000">50000</option>\
-                    <option value="100000">100000</option>\
-                  </select>\
-            </div>\
-            <div  class="col-sm-4">\
-                USDT: <span id="usdtvalue">302.11</span>\
-            </div>\
-            <div class="col-sm-4 col-sm-offset-3" style="margin-top: 5px;">\
-                <button onclick="newTradeRequest('+id+')" type="button" class="btn btn-danger">Request</button>\
-            </div>\
-          </div>\
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-            <ul id="tradeRequestList" class="list-group" style="height: 50vh; overflow-y: auto; margin-top: 10px;" >\
-            </ul>\
-          </div>\
-        </div>\
-    </div>\
-    </div>\
-</div>')
-    $("#other").css({"display":"block"});
-    $("#mytree").css({"display":"none"});
-    $("#refLink").css({"display":"none"});
-    $("#userProfile").css({"display":"none"});
-    $("#tradeRequestList").html('')
-    getTradeRequest(id);
-  }
+//     $("#other").html('<div id="selftrade" style="display: non;" class="panel panel-info">\
+//     <div class="panel-heading">\
+//         <h3 class="panel-title">Today USDT Rate : 90.00 INR</h3>\
+//     </div>\
+//     <div class="panel-body">\
+//     <div class="row">\
+//         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
+//           <div class="form-group">\
+//             <label for="inputtradeAmount" class="col-sm-3 control-label">Trade-Amount:</label>\
+//             <div class="col-sm-4">\
+//                 <select onchange="usdtcalculetion()" id="inputtradeAmount" class="form-control">\
+//                     <option value="0">Select Amount</option>\
+//                     <option value="10000">10000</option>\
+//                     <option value="25000">25000</option>\
+//                     <option value="50000">50000</option>\
+//                     <option value="100000">100000</option>\
+//                   </select>\
+//             </div>\
+//             <div  class="col-sm-4">\
+//                 USDT: <span id="usdtvalue">302.11</span>\
+//             </div>\
+//             <div class="col-sm-4 col-sm-offset-3" style="margin-top: 5px;">\
+//                 <button onclick="newTradeRequest('+id+')" type="button" class="btn btn-danger">Request</button>\
+//             </div>\
+//           </div>\
+//           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
+//             <ul id="tradeRequestList" class="list-group" style="height: 50vh; overflow-y: auto; margin-top: 10px;" >\
+//             </ul>\
+//           </div>\
+//         </div>\
+//     </div>\
+//     </div>\
+// </div>')
+//     $("#other").css({"display":"block"});
+//     $("#mytree").css({"display":"none"});
+//     $("#refLink").css({"display":"none"});
+//     $("#userProfile").css({"display":"none"});
+//     $("#tradeRequestList").html('')
+//     getTradeRequest(id);
+//   }
 
-  function getTradeRequest(id){
-    $.post('/user/getTradeRequest',{id:id},function(data){
-        if(data.length > 0){
-            $("#tradeRequestList").html('')
-            data.forEach(val => {
+//   function getTradeRequest(id){
+//     $.post('/user/getTradeRequest',{id:id},function(data){
+//         if(data.length > 0){
+//             $("#tradeRequestList").html('')
+//             data.forEach(val => {
                 
-                $("#tradeRequestList").append('<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">\
-                <div class="thumbnail">\
-                    <div class="caption">\
-                        <h3>Trade Request</h3>\
-                        <p>\
-                            Name: '+val.userName+'<br>\
-                            ID: '+val.userID+'<br>\
-                            Trade Amount: '+val.tradeAmount+' INR<br>\
-                            USDT: '+val.usdtbuy+'<br>\
-                            Status: Sell Pending<br>\
-                        </p>\
-                        <p>\
-                            <a href="#" class="btn btn-primary">Update</a>\
-                            <a href="#" class="btn btn-danger">Cancel Request</a>\
-                        </p>\
-                    </div>\
-                </div>\
-            </div>') 
-            });
-        } 
-    })
-  }
+//                 $("#tradeRequestList").append('<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">\
+//                 <div class="thumbnail">\
+//                     <div class="caption">\
+//                         <h3>Trade Request</h3>\
+//                         <p>\
+//                             Name: '+val.userName+'<br>\
+//                             ID: '+val.userID+'<br>\
+//                             Trade Amount: '+val.tradeAmount+' INR<br>\
+//                             USDT: '+val.usdtbuy+'<br>\
+//                             Status: Sell Pending<br>\
+//                         </p>\
+//                         <p>\
+//                             <a href="#" class="btn btn-primary">Update</a>\
+//                             <a href="#" class="btn btn-danger">Cancel Request</a>\
+//                         </p>\
+//                     </div>\
+//                 </div>\
+//             </div>') 
+//             });
+//         } 
+//     })
+//   }
 
 
-  function usdtcalculetion(){
-   var inr= $("#inputtradeAmount").val();
-   var usdt=(Number(inr) / 90).toFixed(2);
-   $("#usdtvalue").html(''+usdt+'')
+//   function usdtcalculetion(){
+//    var inr= $("#inputtradeAmount").val();
+//    var usdt=(Number(inr) / 90).toFixed(2);
+//    $("#usdtvalue").html(''+usdt+'')
    
-  }
+//   }
 
-  function newTradeRequest(id){
+//   function newTradeRequest(id){
    
-    var inr= $("#inputtradeAmount").val();
-    var usdt=(Number(inr) / 90).toFixed(2);
-    if(inr > 0){
-        $.post('/user/tradeRequest',{
-            id:id,
-            usdt:usdt,
-            inr:inr
-        },function(user){
-           getTradeRequest(user.userID); 
-        });
-    }else{
-        alert("Select Trade-Amount")
-    }
+//     var inr= $("#inputtradeAmount").val();
+//     var usdt=(Number(inr) / 90).toFixed(2);
+//     if(inr > 0){
+//         $.post('/user/tradeRequest',{
+//             id:id,
+//             usdt:usdt,
+//             inr:inr
+//         },function(user){
+//            getTradeRequest(user.userID); 
+//         });
+//     }else{
+//         alert("Select Trade-Amount")
+//     }
 
-  }
+//   }
    
   

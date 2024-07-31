@@ -78,7 +78,9 @@ const fundrequestSchema = new mongoose.Schema({
     principalPaid:String,
     interestPaid:String,
     maturity:String,
-    maturitydate: { type: Date }
+    maturitydate: { type: Date },
+    
+    
 });
 
 var fundrequestmodul = mongoose.model('moneyfundrequests', fundrequestSchema);
@@ -130,10 +132,34 @@ const userLavelLedgerSchema = new mongoose.Schema({
 });
 var userLavelLedgermodul = mongoose.model('moneyuserlavelledger', userLavelLedgerSchema);
 
+const walletSchema = new mongoose.Schema({ 
+    userID:String,
+    commision:String,
+    salary:String,
+    salaryPayCount:String,
+    salaryCondition:String,
+    interest:String,
+    principal:String,
+    totalamount:String,
+    totalamountwithdrawal:String,
+   lastcheckdate: { type: Date}
+});
+var walletmodul = mongoose.model('moneywallet', walletSchema);
 
-
-
-
+const withdrawalSchema = new mongoose.Schema({ 
+    uid:String,
+    userID:String,
+    commisionwithdrawal:String,
+    salarywithdrawal:String,
+    salaryPayCount:String,
+    salaryCondition:String,
+    interestwithdrawal:String,
+    principalwithdrawal:String,
+    withdwaralAmount:String,
+    usdtwalletAddress:String,
+    withdrawalDate: { type: Date}
+});
+var withdrawalmodul = mongoose.model('moneywithdrawal', withdrawalSchema);
 
 
 
@@ -145,5 +171,7 @@ module.exports={
     admin:adminmodul,
     fundrequest:fundrequestmodul,
     upiidlist:upiidlistmodul,
-    totayUSDT:totayUSDTmodul
+    totayUSDT:totayUSDTmodul,
+    wallet:walletmodul,
+    withdrawal:withdrawalmodul
 }

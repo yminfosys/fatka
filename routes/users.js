@@ -20,12 +20,9 @@ const saltRounds = 10;
 
 /* GET users listing. */
 
-router.post('/test', async function(req, res, next) {
+router.get('/test', async function(req, res, next) {
   try {
-    await dbCon.connectDB();
-
-
-    await dbCon.closeDB();
+    res.render('user/test',{})
   }catch (error) {
     console.log(error);
     return error;
@@ -230,14 +227,55 @@ router.post('/getWallets', async function(req, res, next) {
   try {
     await dbCon.connectDB();
     const fund= await db.fundrequest.find({userID:req.body.userID,fundrequestStatus:"Accept"});
+    const wallet= await db.wallet.findOne({userID:req.body.userID});
     await dbCon.closeDB();
-    res.json(fund);
+    res.json({fund:fund,wallet:wallet});
   }catch (error) {
     console.log(error);
     return error;
   }
   
 });
+
+router.post('/processWithdrawal', async function(req, res, next) {
+  console.log(req.body)
+  var uid = (new Date().getTime()).toString(9)
+  try {
+    await dbCon.connectDB();
+    const old= await db.wallet.findOne({userID:req.body.userID});
+    if(old.totalamountwithdrawal){
+      var totalwithdrawl=Number(old.totalamountwithdrawal) + Number(req.body.total);
+    }else{
+      var totalwithdrawl=Number(req.body.total);
+    }
+    const addcomision= await db.withdrawal({
+      uid:uid,
+      userID:req.body.userID,
+      commisionwithdrawal:req.body.commision,
+      salarywithdrawal:req.body.salary,
+      interestwithdrawal:req.body.interest,
+      principalwithdrawal:req.body.principal,
+      withdwaralAmount:req.body.total,
+      usdtwalletAddress:req.body.usdtwalletAddress,
+      withdrawalDate: new Date()
+    });
+    await addcomision.save();
+    const fundreee= await db.wallet.findOneAndUpdate({userID:req.body.userID},{$set:{
+      commision:0,
+      salary:0,
+      interest:0,
+      principal:0,
+      totalamountwithdrawal:totalwithdrawl,
+    }});
+    await dbCon.closeDB();
+   res.send(uid)
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+  
+});
+
 
 
 

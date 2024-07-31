@@ -546,9 +546,8 @@ function searchdown(){
         </div>\
     </div>');
     totalearning(user.userID);
-    viewmenu(user.userID);
-    viewwallet(user.userID);
-    viewfooter(user.userID);
+   
+    
 
   }
 
@@ -688,10 +687,20 @@ function searchdown(){
 
   }
 
-  function totalearning(){
-    $("#totalearning").html('\
-    <p>TOTAL EARNING</p>\
-    <p>RS. 0.00</p>')
+  function totalearning(userID){
+    $.post('/user/getWallets',{userID:userID},function(data){
+        if(data.wallet){
+            var total=data.wallet.totalamount;
+        }else{
+            var total=0; 
+        }
+        $("#totalearning").html('\
+            <p>TOTAL EARNING</p>\
+            <p>RS. '+Number(total).toFixed(2)+'</p>')
+            viewmenu(userID);
+
+    })
+   
   }
 
   function viewmenu(userID){
@@ -711,7 +720,7 @@ function searchdown(){
         </div>\
             \
         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-            <div style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
+            <div onclick="withdrawalInit(\''+userID+'\',\'Old\')"  style="text-align: center; border: 1px solid #FFF;" class="thumbnail">\
                 <button  type="button" class="btn btn-sm btn-info"><i class="fa fa-usd" aria-hidden="true"></i><i class="fa fa-usd" aria-hidden="true"></i></button>\
                 <p style="font-size: xx-small;">Withdrawal</p>\
             </div>\
@@ -775,6 +784,8 @@ function searchdown(){
 </div>\
     </li>\
 </ul>');
+    viewwallet(userID);
+    viewfooter(userID);
   }
 
     async function levelView(userID){
@@ -873,28 +884,31 @@ function searchdown(){
 
   function viewwallet(userID){
    // alert(userID)
-    $.post('/user/getWallets',{userID:userID},function(fund){
+    $.post('/user/getWallets',{userID:userID},function(data){
         //console.log(fund)
         var invetment=0;
-        if(fund.length >0){
-            fund.forEach(val => {
+        if(data.fund.length >0){
+            data.fund.forEach(val => {
                 invetment=Number(invetment)+ Number(val.usdt);
             });
         }
+       
+       
 
+        var totalwithdrawal= Number(data.wallet.interest)+Number(data.wallet.principal)+Number(data.wallet.commision)+Number(data.wallet.salary)
         $("#viewwallet").html('<ul class="list-group">\
         <li class="list-group-item col-xs-12 col-sm-12">\
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
                 <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                    <p style="font-size: xx-small;">Comission: 0.00 USDT</p>\
-                    <p style="font-size: xx-small;">Salary: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Comission: '+Number(data.wallet.commision).toFixed(2)+' USDT</p>\
+                    <p style="font-size: xx-small;">Salary: '+Number(data.wallet.salary).toFixed(2)+' USDT</p>\
                     <p style="font-size: xx-small;">Performence Bonus</p>\
                 </div>\
             </div>  \
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
                 <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
-                    <p style="font-size: xx-small;">Interest: 0.00 USDT</p>\
-                    <p style="font-size: xx-small;">Pricipal: 0.00 USDT</p>\
+                    <p style="font-size: xx-small;">Interest: '+Number(data.wallet.interest).toFixed(2)+' USDT</p>\
+                    <p style="font-size: xx-small;">Pricipal: '+Number(data.wallet.principal).toFixed(2)+' USDT</p>\
                     <p style="font-size: xx-small;">Profit Shareing</p>\
                 </div>\
             </div> \
@@ -911,7 +925,7 @@ function searchdown(){
                 <div style="text-align: center; border: 1px solid rgb(32, 11, 11); height: 110px;" class="thumbnail">\
                     <p style="font-size: large;">E-Wallet</p>\
                     <p style="font-size: large;">Total Amount</p>\
-                    <p style="font-size: large;">0.00 USDT</p>\
+                    <p style="font-size: large;">'+Number(totalwithdrawal).toFixed(2)+' USDT</p>\
                 </div>\
             </div> \
             <p style="font-size: xx-small;">NB:<br>1. Admin charge 5% will be deducted every Withdrawal<br>\
@@ -919,10 +933,62 @@ function searchdown(){
         </li>\
     </ul>')
 
+    });
+  }
+
+  function withdrawalInit(userID){
+    $.post('/user/getWallets',{userID:userID},function(data){
+        var total= Number(data.wallet.interest)+Number(data.wallet.principal)+Number(data.wallet.commision)+Number(data.wallet.salary)
+        $("#view").html('            <div class="panel panel-success">\
+                  <div class="panel-heading">\
+                        <h3 class="panel-title">Withdrawal</h3>\
+                  </div>\
+                  <div class="panel-body">\
+                    <h1>Total : '+Number(total).toFixed(2)+' USDT</h1>\
+                    <p>\
+                        Interest Return: '+Number(data.wallet.interest).toFixed(2)+' USDT<br>\
+                        Principal Return: '+Number(data.wallet.principal).toFixed(2)+' USDT<br>\
+                        Commission: '+Number(data.wallet.commision).toFixed(2)+' USDT<br>\
+                        Salary: '+Number(data.wallet.salary).toFixed(2)+' USDT<br>\
+                    </p>\
+                    <div class="form-group">\
+                        <label for="">Crypto Wallet Address: BEP-20</label>\
+                        <textarea name="" id="usdtwalletAddress" class="form-control" rows="3" required="required"></textarea>\
+                        <label style="color: red;" for=""><br>Crypto Wallet Address Should be BEP-20 and Check Address\
+                            <br>\
+                            If you Mistake in this part your Assest will lost for ever\
+                        </label>\
+                    </div>\
+                    <button onclick="processWithdrawal(\''+userID+'\',\''+data.wallet.interest+'\',\''+data.wallet.principal+'\',\''+data.wallet.commision+'\',\''+data.wallet.salary+'\',\''+total+'\')" type="submit" class="btn btn-primary">Withdrawal</button>\
+                  </div>\
+            </div>')
     })
 
-   
   }
+
+  function processWithdrawal(userID,interest,principal,commision,salary,total){
+    var usdtwalletAddress=$("#usdtwalletAddress").val();
+    $.post('/user/processWithdrawal',{
+        userID:userID,
+        interest:interest,
+        principal:principal,
+        commision:commision,
+        salary:salary,
+        total: total,
+        usdtwalletAddress:usdtwalletAddress
+    },function(data){
+        $("#view").html(' <div class="panel panel-success">\
+            <div class="panel-heading">\
+                  <h3 class="panel-title">Withdrawal</h3>\
+            </div>\
+            <div class="panel-body">\
+              Withdrawal Success <br>\
+              Transaction ID: '+data+'\
+            </div>\
+      </div>')
+    })
+  }
+  
 
   function viewfooter(){
     $("#viewfooter").html('<ul class="list-group">\
@@ -955,241 +1021,6 @@ function searchdown(){
     </ul>');
   }
 
-//   function myTree(id,lavel){
-//     //alert(id)
-//     $.post('/user/getTree',{id:id,lavel:lavel},function(data){
-//        // console.log(data)
-//         $("#mytree").css({"display":"block"});
-        
-//         $("#other").css({"display":"none"})
-//         $("#treeHead").html(' <li class="list-group-item active">\
-//         <span class="badge">'+data.Mytree.length+'</span>\
-//         <span class="badge">Lavel-'+lavel+'</span>\
-//         '+data.user.userName+' [ Total : '+data.totalChain+' ]\
-//         </li>\
-//         <li class="list-group-item" style="height: 6vh; margin-top:2px;">\
-//         <div class="col-xs-8">\
-//         <select id="yourlavel" class="form-control">\
-//             <option value="">Select Lavel</option>\
-//             <option value="1">Direct</option>\
-//             <option value="2">Lavel-2</option>\
-//             <option value="3">Lavel-3</option>\
-//             <option value="4">Lavel-4</option>\
-//             <option value="5">Lavel-5</option>\
-//             <option value="6">Lavel-6</option>\
-//             <option value="7">Lavel-7</option>\
-//             <option value="8">Lavel-8</option>\
-//             <option value="9">Lavel-9</option>\
-//             <option value="10">Lavel-10</option>\
-//             <option value="11">Lavel-11</option>\
-//             <option value="12">Lavel-12</option>\
-//             <option value="13">Lavel-13</option>\
-//             <option value="14">Lavel-14</option>\
-//             <option value="15">Lavel-15</option>\
-//             <option value="16">Lavel-16</option>\
-//             <option value="17">Lavel-17</option>\
-//             <option value="18">Lavel-18</option>\
-//             <option value="19">Lavel-19</option>\
-//             <option value="20">Lavel-20</option>\
-//         </select>\
-//         </div>\
-//         <div class="col-xs-4">\
-//         <button onclick="callLavelTree('+id+')" type="button" class="btn btn-sm btn-primary">Go</button>\
-//         </div>\
-//         </li>');
-//         $("#treeList").html("")
-//         data.Mytree.forEach(val => {
-//             var cstClass="list-group-item-success";
-//             if(val.paidEarninyStatus=="Due"){
-//                 cstClass= "list-group-item-info";
-//             }
-            
-//             $("#treeList").append('<li class="list-group-item '+cstClass+'">'+val.userName+'<br/>ID: MR-'+val.userID+'</li>')
-            
-//         });
-//         $("#treeList").append('<li style="" class="list-group-item"> \
-//             <ul class="pagination pagination-sm">\
-//                 <li><a href="#">&laquo;</a></li>\
-//                 <li><a href="#">1</a></li>\
-//                 <li><a href="#">2</a></li>\
-//                 <li><a href="#">&raquo;</a></li>\
-//            </ul>\
-//            </li>');
-//     });
-//   }
 
-//   function callLavelTree(id){
-//     var lavel=$("#yourlavel").val();
-//     myTree(id,lavel);
-//   }
-
-//   function activeThisUser(id){
-//     $("#ActivateThisUser").css({"display":"block"});
-//     $("#ActivateThisUser").html('<div  style="margin-top:3vh; height:101vh" class="row">\
-//     <div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">\
-//         <div class="panel panel-success">\
-//             <input type="hidden"  id="activeUserID" value="'+id+'">\
-//               <div class="panel-heading">\
-//                     <h3 class="panel-title">Complete this to Activate </h3>\
-//               </div>\
-//                 <div class="form-group">\
-//                     <label>Western Union ID</label>\
-//                         <input type="text"  id="wuID" class="form-control" >\
-//                 </div>\
-// \
-//                 <div class="form-group">\
-//                     <label>Western Union Password</label>\
-//                         <input type="text"  id="wuPsd" class="form-control" >\
-//                 </div>\
-// \
-//                 <div class="form-group">\
-//                     <label>Binance ID</label>\
-//                         <input type="text"  id="BinanceID" class="form-control" >\
-//                 </div>\
-// \
-//                 <div class="form-group">\
-//                     <label>Binance Password</label>\
-//                         <input type="text"  id="BinancePsd" class="form-control" >\
-//                 </div>\
-// \
-//                 <div class="form-group">\
-//                     <label>Email ID</label>\
-//                         <input type="text"  id="EmlID" class="form-control" >\
-//                 </div>\
-// \
-//                 <div class="form-group">\
-//                     <label>Email Password</label>\
-//                         <input type="text"  id="EmlPsd" class="form-control" >\
-//                 </div>\
-//                 <div class="form-group">\
-//                     <label>Bank Details</label> \
-//                     <textarea  id="BankDelais" class="form-control" rows="3" placeholder="Name , A/c, IFSC, Bank Nane"></textarea>\
-//                 </div>\
-//                 <button onclick="completeReg()" type="button" class="btn btn-primary">Submit</button>\
-//               </div>\
-//         </div>  \
-//     </div>')
-
-//   }
-
-// //   function createRefLink(id){
-// //     $.post('/user/createRefLink',{id:id},function(data){
-
-// //         var conte='https://richrova.co.uk/user?refrootID='+data.rootID+'&refid='+data.userID+'&refname='+data.userName+'';
-        
-// //          conte=encodeURI(conte);
-
-// //         // $("#refLink").css({"display":"block"})
-
-// //         // $("#other").css({"display":"none"})
-// //         // $("#mytree").css({"display":"none"})
-// //         navigator.clipboard.writeText(conte);
-        
-
-// //         $("#refLink").html('<div class="alert alert-info">\
-// //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
-// //         <strong>Copy This Link </strong>'+conte+'\
-// //     </div>')
-// //     })
-
-// //   }
-
-//   function selfTradeInit(id){
-    
-//     $("#other").html('<div id="selftrade" style="display: non;" class="panel panel-info">\
-//     <div class="panel-heading">\
-//         <h3 class="panel-title">Today USDT Rate : 90.00 INR</h3>\
-//     </div>\
-//     <div class="panel-body">\
-//     <div class="row">\
-//         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-//           <div class="form-group">\
-//             <label for="inputtradeAmount" class="col-sm-3 control-label">Trade-Amount:</label>\
-//             <div class="col-sm-4">\
-//                 <select onchange="usdtcalculetion()" id="inputtradeAmount" class="form-control">\
-//                     <option value="0">Select Amount</option>\
-//                     <option value="10000">10000</option>\
-//                     <option value="25000">25000</option>\
-//                     <option value="50000">50000</option>\
-//                     <option value="100000">100000</option>\
-//                   </select>\
-//             </div>\
-//             <div  class="col-sm-4">\
-//                 USDT: <span id="usdtvalue">302.11</span>\
-//             </div>\
-//             <div class="col-sm-4 col-sm-offset-3" style="margin-top: 5px;">\
-//                 <button onclick="newTradeRequest('+id+')" type="button" class="btn btn-danger">Request</button>\
-//             </div>\
-//           </div>\
-//           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-//             <ul id="tradeRequestList" class="list-group" style="height: 50vh; overflow-y: auto; margin-top: 10px;" >\
-//             </ul>\
-//           </div>\
-//         </div>\
-//     </div>\
-//     </div>\
-// </div>')
-//     $("#other").css({"display":"block"});
-//     $("#mytree").css({"display":"none"});
-//     $("#refLink").css({"display":"none"});
-//     $("#userProfile").css({"display":"none"});
-//     $("#tradeRequestList").html('')
-//     getTradeRequest(id);
-//   }
-
-//   function getTradeRequest(id){
-//     $.post('/user/getTradeRequest',{id:id},function(data){
-//         if(data.length > 0){
-//             $("#tradeRequestList").html('')
-//             data.forEach(val => {
-                
-//                 $("#tradeRequestList").append('<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">\
-//                 <div class="thumbnail">\
-//                     <div class="caption">\
-//                         <h3>Trade Request</h3>\
-//                         <p>\
-//                             Name: '+val.userName+'<br>\
-//                             ID: '+val.userID+'<br>\
-//                             Trade Amount: '+val.tradeAmount+' INR<br>\
-//                             USDT: '+val.usdtbuy+'<br>\
-//                             Status: Sell Pending<br>\
-//                         </p>\
-//                         <p>\
-//                             <a href="#" class="btn btn-primary">Update</a>\
-//                             <a href="#" class="btn btn-danger">Cancel Request</a>\
-//                         </p>\
-//                     </div>\
-//                 </div>\
-//             </div>') 
-//             });
-//         } 
-//     })
-//   }
-
-
-//   function usdtcalculetion(){
-//    var inr= $("#inputtradeAmount").val();
-//    var usdt=(Number(inr) / 90).toFixed(2);
-//    $("#usdtvalue").html(''+usdt+'')
-   
-//   }
-
-//   function newTradeRequest(id){
-   
-//     var inr= $("#inputtradeAmount").val();
-//     var usdt=(Number(inr) / 90).toFixed(2);
-//     if(inr > 0){
-//         $.post('/user/tradeRequest',{
-//             id:id,
-//             usdt:usdt,
-//             inr:inr
-//         },function(user){
-//            getTradeRequest(user.userID); 
-//         });
-//     }else{
-//         alert("Select Trade-Amount")
-//     }
-
-//   }
    
   

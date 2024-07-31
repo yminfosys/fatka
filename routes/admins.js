@@ -314,6 +314,75 @@ router.post('/rejectFund', async function(req, res, next) {
 });
 
 
+
+router.post('/commisionIncentiveadd', async function(req, res, next) {
+ console.log(req.body)
+  try {
+    if(req.body.commision){
+      var commision=req.body.commision
+    }else{
+      var commision=0;
+    }
+    if(req.body.salary){
+      var salary=req.body.salary
+    }else{
+      var salary=0;
+    }
+    if(req.body.interest){
+      var interest=req.body.interest
+    }else{
+      var interest=0;
+    }
+    if(req.body.principal){
+      var principal=req.body.principal
+    }else{
+      var principal=0;
+    }
+    await dbCon.connectDB();
+    var total= Number(commision)+Number(salary)+Number(interest)+Number(principal)
+    const fund= await db.wallet.findOne({userID:req.body.userID});
+    if(fund){
+      /////update data/////
+      total=Number(total)+ Number(fund.totalamount);
+      const fundreee= await db.wallet.findOneAndUpdate({userID:req.body.userID},{$set:{
+        commision:commision,
+        salary:salary,
+        interest:interest,
+        principal:principal,
+        totalamount:total,
+        lastcheckdate:new Date(),
+      }});
+      await dbCon.closeDB();
+      res.send("ok")
+    }else{
+      ///////add data////
+      const addcomision= await db.wallet({
+        userID:req.body.userID,
+        commision:commision,
+        salary:salary,
+        interest:interest,
+        principal:principal,
+        totalamount:total,
+        lastcheckdate:new Date(),
+      });
+      await addcomision.save();
+      await dbCon.closeDB();
+      res.send("ok")
+    }
+   
+    
+   
+    
+  
+ 
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+  
+});
+
+
 // userID: '2',
 // accounttype: 'New',
 // inr: '9002',

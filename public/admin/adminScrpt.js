@@ -23,7 +23,8 @@ $( document ).ready(function() {
             </div>\
     </div>')
 
-})
+});
+
 
 function newChannelInit(){
     $("#newChannel").html('<div  class="col-xs-12 col-sm-12">\
@@ -366,6 +367,69 @@ function addusdtrate(){
         </div>')
         }
     })
+}
+
+
+function interestandCommissionInit(){
+    $("#view").html('<div class="panel panel-success">\
+                  <div class="panel-heading">\
+                        <h3 class="panel-title">Incentive and Interest</h3>\
+                  </div>\
+                  <div class="panel-body">\
+                    <div class=""> \
+                     <div class="form-group">\
+                            <label for=""> UserID : Sukanta SArdar</label>\
+                            <input type="text" class="form-control" id="userID">\
+                        </div>\
+                        <div class="form-group">\
+                            <label for=""> Commission</label>\
+                            <input type="text" class="form-control" id="commision">\
+                        </div>\
+                        <div class="form-group">\
+                            <label for="">Salary</label>\
+                            <input type="text" class="form-control" id="salary">\
+                        </div>\
+                        <div class="form-group">\
+                            <label for="">Interrest</label>\
+                            <input type="text" class="form-control" id="interest">\
+                        </div>\
+                        <div class="form-group">\
+                            <label for="">Principal return</label>\
+                            <input type="text" class="form-control" id="principal">\
+                        </div>\
+                        <button onclick="incentiveandinterest()" type="submit" class="btn btn-primary">Submit</button>\
+                    </div>\
+                  </div>\
+            </div>') 
+}
+
+function incentiveandinterest(){
+    var userID=$("#userID").val();
+    var commision=$("#commision").val();
+    var salary=$("#salary").val();
+    var interest=$("#interest").val();
+    var principal=$("#principal").val();
+    $.post('/admin/commisionIncentiveadd',{
+        userID:userID,
+        commision:commision,
+        salary:salary,
+        interest:interest,
+        principal:principal
+    },function(data){
+        if(data){
+            $("#view").html('<div class="panel panel-success">\
+                <div class="panel-heading">\
+                      <h3 class="panel-title">Incentive and Interest</h3>\
+                </div>\
+                <div class="panel-body">\
+                <h3>add success</h3>\
+                  </div>\
+                </div>\
+          </div>') 
+        }
+
+    })
+
 }
 
 // function userDetails(){

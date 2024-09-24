@@ -303,14 +303,14 @@ router.post('/mydirect', async function(req, res, next) {
 
     const distingDate = await db.traininguser.distinct("activationDate",{ 
       activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()},
-      rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, 
+      rootID: { $regex: '.*' + user.rootID + '.*' , $options: 'i' }, 
       varyficatinStatus:"Verify"
       }); 
     const direct = await db.traininguser.countDocuments({directParentID:user.userID, varyficatinStatus:"Verify", activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}});
    
     //console.log(distingDate)
     //console.log("Start Time:",StartTime,"End Time",EndTime)
-    //console.log(distingDate)
+    //console.log(distingDate) 
     await dbCon.closeDB();
 
 

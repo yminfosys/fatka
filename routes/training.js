@@ -329,7 +329,7 @@ router.post('/mydirect', async function(req, res, next) {
       }else{
         rightVerify=Number(rightVerify)+ 20;
       }
-      console.log(leftVerify)
+      console.log("leftVerify", leftVerify ,"rightVerify",rightVerify)
 
     }
 

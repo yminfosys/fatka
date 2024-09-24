@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Admin</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link href="/admin/sidebar.css" rel="stylesheet" type="text/css">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+        <script src="/admin/sidebar.js"></script>
+        <script src="/admin/adminScrpt.js"></script>
+        <script src="/admin/trainingAdminScrpt.js"></script>
+    </head>
+
+    <body>
+
+        
+
+
+        <div id="sidebar-waper">
+            <div class="togle-btn" onclick="sidebartoggle()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="sidebar-menue">
+            <li class="Dashboard"><a href="../india/admin"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
+            <li class="Profile">
+              <a href="#ProfileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                  <i class="fa fa-cogs"></i>
+                  <span>Menu</span>
+              </a>
+              <ul class="collapse " id="ProfileSubmenu">
+                  <li><a href="#" onclick="newChannelInit()">Add Chennal Partner</a></li>
+                  <li><a href="#" onclick="setStartUserid()">Set Start User ID</a></li>
+                  
+              </ul>
+            </li>
+            
+            <li onclick="addusdtrateinit()" class="ridedetails"><a href="#"> <span> USDT Update</span></a></li>
+            <li onclick="addupiinit()" class="gst"><a href="#"> <span> Add Upi</span></a></li>
+            <li onclick="activeupiinit()" class="gst"><a href="#"> <span> UPI Update</span></a></li>
+            <li onclick="fundRequest()" class="gst"><a href="#"> <span> Fund Request</span></a></li>
+
+            <li onclick="interestandCommissionInit()" class="addwallet"><a href="#"> <span>Interest and commision</span></a></li>
+            <li onclick="orderAmountModify()" class="modf"><a href="#"> <span>Modify Order Amount</span></a></li>
+            <li onclick="forgetpasswordInit()" class="ridedetails"><a href="#"> <span>Forget Password Request</span></a></li>
+            <li onclick="paymentInit()" class="ridedetails"><a href="#"> <span> Candidate Payment</span></a></li>
+
+            <li class="Profile">
+                <a href="#trainingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fa fa-cogs"></i>
+                    <span>Training</span>
+                </a>
+                <ul class="collapse " id="trainingSubmenu">
+                    <li><a href="#" onclick="newtrainingChannelInit()">Add Chennal Partner</a></li>
+                    <li><a href="#" onclick="setTrainingStartUserid()">Set Start User ID</a></li>
+                    <li><a href="#" onclick="activationPinGenerate()">Generate Activation Pin</a></li>
+                    <li><a href="#" onclick="trforgetpasswordInit()">Forget Password</a></li>
+                    <li><a href="#" onclick="trainingFee()">Fee adjust</a></li>
+                    
+                </ul>
+              </li>
+            
+            
+            <li class="Logout"><a href="/india/admin/logout"> <span> Logout</span></a></li>
+            </ul>
+        </div>
+
+        <div id="main-content">  
+
+            <div style="margin-top: 1vh;" id="view">
+
+
+            </div>
+        
+
+        
+            <div  id="newChannel">
+                
+              
+                 
+
+            </div>
+
+            <div style="display: none;"  id="allUser">
+
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-success">Item 1</li>
+                    <li class="list-group-item">Item 2</li>
+                    <li class="list-group-item">Item 3</li>
+                </ul>
+
+            </div>
+            
+            <div style="display:none;"  id="forgetpassword">
+            
+            </div>
+
+            <!-- <div style="display: none;"  id="replaceID">
+                <div  class="col-xs-12 col-sm-12">
+                    <div class="panel panel-success">
+                          <div id="userListHeding" class="panel-heading">
+                                <h3 class="panel-title">Replace New ID with Old ID</h3>
+                          </div>
+                          <div class="panel-body">
+                            
+                            <div class="form-group" id="replacrDetails">
+                                <label for="inputOLD ID" class="col-sm-2 control-label">OLD ID:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="OLD ID" id="oldID" class="form-control" value="" required="required" pattern="" title="">
+                                </div>
+                                <div class="col-sm-10 col-sm-offset-2" style="margin-top: 5px;">
+                                    
+                                    <button onclick="getoldIDDetails()" type="button" class="btn btn-primary form-control">Submit</button>
+                                    
+                                </div>
+
+                                <label for="inputOLD ID" class="col-sm-2 control-label">Name:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="nameReplace" class="form-control" value="">
+                                </div>
+
+                                <label for="inputOLD ID" class="col-sm-2 control-label">email:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="emailReplace" class="form-control" value="">
+                                </div>
+
+                                <label for="inputOLD ID" class="col-sm-2 control-label">Mobile:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="mobileReplace" class="form-control" value="">
+                                </div>
+
+                                <label for="inputOLD ID" class="col-sm-2 control-label">Pan No:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="panReplace" class="form-control" value="">
+                                </div>
+
+                                <label for="inputOLD ID" class="col-sm-2 control-label">Address:</label>
+                                <div class="col-sm-10">
+                                    <textarea  id="addressReplace" class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <div class="col-sm-10 col-sm-offset-2" style="margin-top: 5px;">
+                                    
+                                    <button onclick="oldtonewReplace()" type="button" class="btn btn-primary form-control">Replace</button>
+                                    
+                                </div> 
+                                
+                            </div>
+                            
+                            
+                            
+                          </div>
+                    </div>
+                </div>
+            
+            </div> -->
+
+
+
+
+
+        </div>
+
+    
+           
+           
+           
+           
+    
+       
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+</html>

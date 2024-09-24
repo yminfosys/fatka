@@ -1,0 +1,10 @@
+#CompleteRegistration {
+  position: absolute; 
+   width: 100%; 
+  z-index: 100;
+  
+  left: 0px;
+  background-color: rgba(223, 216, 216, 0.6);
+  display: none;
+  
+}

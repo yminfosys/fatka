@@ -300,7 +300,11 @@ router.post('/mydirect', async function(req, res, next) {
    //console.log("benifit",benifit)
    
     var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
-    const distingDate = await db.traininguser.distinct("activationDate",{ activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}}); 
+    const distingDate = await db.traininguser.distinct("activationDate",{ 
+      activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()},
+      rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, 
+      varyficatinStatus:"Verify"
+      }); 
     const direct = await db.traininguser.countDocuments({directParentID:user.userID, varyficatinStatus:"Verify", activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}});
    
     //console.log(distingDate)
@@ -312,7 +316,7 @@ router.post('/mydirect', async function(req, res, next) {
       var leftVerify=0;
       var rightVerify=0;
 
-/    //// Caping///////////
+      //// Caping///////////
     for(var i=0; i<distingDate.length; i++ ){
       console.log(i,distingDate[i],"Lenght",distingDate.length)
       

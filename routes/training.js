@@ -314,11 +314,11 @@ router.post('/mydirect', async function(req, res, next) {
 
 /    //// Caping///////////
     for(var i=0; i<distingDate.length; i++ ){
-      //console.log(i,distingDate[i])
-      //console.log(leftVerify)
+      console.log(i,distingDate[i],"Lenght",distingDate.length)
+      
 
       const data = await dailyCaping(distingDate[i],user.rootID);
-      //console.log( data.left, data.right);
+       console.log( data.left, data.right);
       if(data.left < 21){
         leftVerify=Number(leftVerify)+ Number(data.left);
       }else{
@@ -329,6 +329,7 @@ router.post('/mydirect', async function(req, res, next) {
       }else{
         rightVerify=Number(rightVerify)+ 20;
       }
+      console.log(leftVerify)
 
     }
 

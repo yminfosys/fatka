@@ -328,7 +328,7 @@ router.post('/mydirect', async function(req, res, next) {
       if(!check){
         dateProtectArry.push(dat)
         // console.log("Caping");
-        // console.log(dateProtectArry);
+         console.log(dateProtectArry);
         const data = await dailyCaping(distingDate[i],user.rootID);
        console.log( data.left, data.right);
       if(data.left < 21){

@@ -300,6 +300,7 @@ router.post('/mydirect', async function(req, res, next) {
    //console.log("benifit",benifit)
    
     var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
+
     const distingDate = await db.traininguser.distinct("activationDate",{ 
       activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()},
       rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, 
@@ -317,11 +318,18 @@ router.post('/mydirect', async function(req, res, next) {
       var rightVerify=0;
 
       //// Caping///////////
+      var dateProtectArry=[];
     for(var i=0; i<distingDate.length; i++ ){
       console.log(i,distingDate[i],"Lenght",distingDate.length)
-      
-
-      const data = await dailyCaping(distingDate[i],user.rootID);
+      var dat=moment(distingDate[i]).utc().format("L");
+      // console.log(dat)
+      const check = dateProtectArry.includes(dat)
+     // console.log(check);
+      if(!check){
+        dateProtectArry.push(dat)
+        // console.log("Caping");
+        // console.log(dateProtectArry);
+        const data = await dailyCaping(distingDate[i],user.rootID);
        console.log( data.left, data.right);
       if(data.left < 21){
         leftVerify=Number(leftVerify)+ Number(data.left);
@@ -334,7 +342,7 @@ router.post('/mydirect', async function(req, res, next) {
         rightVerify=Number(rightVerify)+ 20;
       }
       console.log("leftVerify", leftVerify ,"rightVerify",rightVerify)
-
+      }
     }
 
     ///////Pair match//////////

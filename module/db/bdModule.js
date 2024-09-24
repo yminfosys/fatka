@@ -188,14 +188,18 @@ var trainingusermodul = mongoose.model('trainingusers', traininguserSchema);
 
 
 const benifitSchema = new mongoose.Schema({ 
-    directSponsor:String,
-    machingBonus:String,
+    direct:String,
+    directAmt:String,
+    machingPair:String,
+    machingPairAmt:String,
     tourAchive:String,
     incentive:String,
-    reward:String,
+    gift:String,
     userID:String,
     userName:String,
-    date: { type: Date}
+    totalEarning:String,
+    totalWithdrawal:String,
+    lastCheckDate: { type: Date}
 
 });
 var benifitmodul = mongoose.model('trainingextremleftright', benifitSchema);
@@ -212,7 +216,8 @@ module.exports={
     wallet:walletmodul,
     withdrawal:withdrawalmodul,
     ///////Training///////////
-    traininguser:trainingusermodul
+    traininguser:trainingusermodul,
+    benifit:benifitmodul
 }
 
 

@@ -284,15 +284,55 @@ router.post('/mydirect', async function(req, res, next) {
   });
 
   router.post('/earningData', async function(req, res, next) {
+  
     try {
     await dbCon.connectDB();
     const user = await db.traininguser.findOne({userID:req.body.userID});
-    const direct = await db.traininguser.countDocuments({directParentID:user.userID, varyficatinStatus:"Verify" } );
-    const leftVerify = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
-    const rightVerify = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-2.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
-    const distingDate = await db.traininguser.distinct("activationDate");
-    console.log(distingDate)
+    const benifit = await db.benifit.findOne({userID:req.body.userID});
+    
+    const leftVerify1 = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
+    const rightVerify1 = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-2.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
+   if(benifit){
+    var  StartTime = moment(benifit.lastCheckDate).startOf('day').utc();
+   }else{
+    var  StartTime = moment(user.regdate).startOf('day').utc();
+   }
+   //console.log("benifit",benifit)
+   
+    var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
+    const distingDate = await db.traininguser.distinct("activationDate",{ activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}}); 
+    const direct = await db.traininguser.countDocuments({directParentID:user.userID, varyficatinStatus:"Verify", activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}});
+   
+    //console.log(distingDate)
+    //console.log("Start Time:",StartTime,"End Time",EndTime)
+    //console.log(distingDate)
     await dbCon.closeDB();
+
+
+      var leftVerify=0;
+      var rightVerify=0;
+
+/    //// Caping///////////
+    for(var i=0; i<distingDate.length; i++ ){
+      //console.log(i,distingDate[i])
+      //console.log(leftVerify)
+
+      const data = await dailyCaping(distingDate[i],user.rootID);
+      //console.log( data.left, data.right);
+      if(data.left < 21){
+        leftVerify=Number(leftVerify)+ Number(data.left);
+      }else{
+        leftVerify=Number(leftVerify)+ 20;
+      }
+      if(data.right < 21){
+        rightVerify=Number(rightVerify)+ Number(data.right)
+      }else{
+        rightVerify=Number(rightVerify)+ 20;
+      }
+
+    }
+
+    ///////Pair match//////////
     var pecentage10 = Number(user.activationAmt) * 10/100;
     var directAmt= Number(pecentage10) * direct
     if(leftVerify!=rightVerify){
@@ -305,24 +345,9 @@ router.post('/mydirect', async function(req, res, next) {
       var match=leftVerify;
     }
     
-  //  const data = await dailyCaping("2024-08-28",user.rootID)
-  //  let { left, right} = await data;
-  //  console.log( data.left, data.right)
+  //////////Check 10 Condicion of Binary system For Earning//////
 
-  //  var diffa= moment().diff(moment(user.regdate),'days');
-  //  console.log("Diffrence",diffa)
-  //  for(var i=1; i<diffa+1; i++){
-  //   var new_date = moment(user.regdate).add(i, 'days');
-  //   const data = await dailyCaping(new_date,user.rootID)
-  //  let { left, right} = await data;
-  //  console.log( "L",left, "R",right)
-  //  }
 
-   var startdate = moment(user.activationDate).format("L");
-   var new_date = moment(user.activationDate).add(5, 'days');
-   // console.log("active data",user.activationDate,startdate,new_date,moment(new_date))
-
-  //////////Check 10 Condicion of Binary system//////
 
     var pairMatchAmt = pecentage10 * Number(match)
 
@@ -344,6 +369,8 @@ router.post('/mydirect', async function(req, res, next) {
   
   });
 
+
+
    async function dailyCaping(date,rootID){
     try {
      var out={left:0, right:0};
@@ -353,7 +380,7 @@ router.post('/mydirect', async function(req, res, next) {
      await dbCon.connectDB();
      StartTime = moment(date).startOf('day').utc();
      EndTime = moment(date).endOf('day').utc();
-     console.log("StartTime",StartTime,"EndTime",EndTime,"rootID",rootID)
+     //console.log("StartTime",StartTime,"EndTime",EndTime,"rootID",rootID)
     const leftVerify = await db.traininguser.countDocuments({
       rootID: { $regex: '.*' + rootID + '-1.*' , $options: 'i' }, 
       varyficatinStatus:"Verify",
@@ -364,6 +391,7 @@ router.post('/mydirect', async function(req, res, next) {
        varyficatinStatus:"Verify" ,
        activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate() },
       } );
+      await dbCon.closeDB();
     out={left:leftVerify, right:rightVerify}
       return out;
     } catch (error) {

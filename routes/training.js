@@ -315,8 +315,8 @@ router.post('/mydirect', async function(req, res, next) {
    }
    //console.log("benifit",benifit)
    
-    var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
-    //var  EndTime = moment().endOf('day').utc();
+    //var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
+    var  EndTime = moment().endOf('day').utc();
 
     const distingDate = await db.traininguser.distinct("activationDate",{ 
       activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()},
@@ -484,16 +484,6 @@ router.post('/mydirect', async function(req, res, next) {
       res.json(user)
     }
 
-    // res.json({
-    //   invtAmt:user.activationAmt,
-    //   direct:direct,
-    //   directAmt:directAmt,
-    //   leftVerify:leftVerify,
-    //   rightVerify:rightVerify,
-    //   pairMatch:match,
-    //   pairMatchAmt:pairMatchAmt,
-    //   totalEarning:totalEarning
-    // })
   } catch (error) {
     console.log(error);
     return error;
@@ -593,7 +583,7 @@ async function updateEarning(req){
       totalWithdrawal:0,
       lastCheckDate: new Date()
     })
-    await benifi.save();
+   // await benifi.save();
     await dbCon.closeDB();
   }
   return "ok"

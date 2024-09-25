@@ -194,15 +194,19 @@ const benifitSchema = new mongoose.Schema({
     machingPairAmt:String,
     tourAchive:String,
     incentive:String,
-    gift:String,
+    incentiveStartDate:{ type: Date},
+    incentiveMonthCount:String,
+    giftAchive:String,
+    giftGot:String,
     userID:String,
     userName:String,
+    designation:String,
     totalEarning:String,
     totalWithdrawal:String,
     lastCheckDate: { type: Date}
 
 });
-var benifitmodul = mongoose.model('trainingextremleftright', benifitSchema);
+var benifitmodul = mongoose.model('trainingbenifit', benifitSchema);
 
 module.exports={
     counter:countermodul,

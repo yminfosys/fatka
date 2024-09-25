@@ -204,11 +204,16 @@ function newRegister(){
     //   if(user){
     //     mainContent(user);
     //   }
-    $.post('/training/GetUser',{userID:userID},function(user){
+    
+    $.post('/training/earningCalculation',{userID:userID},function(user){
       mainContent(user);
     })
+    // $.post('/training/GetUser',{userID:userID},function(user){
+    //   mainContent(user);
+    // })
   
   }
+
 
   function mainContent(user){
     if(user.activationDate){
@@ -695,27 +700,47 @@ function newRegister(){
   function earningData(userID){
     $.post('/training/earningData',{userID:userID},  function(data){
       console.log(data)
-      $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
-      $("#view").css({"display":"none"});
-      $("#view1").html('<div class="card m-2" style="">\
-            <div class="card-header">\
-               <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
-              Earnings \
-            </div>\
-            <div class="card-body">\
-              <p>Total Earning : &#8377; '+data.totalEarning+' </p>\
-              <ul class="list-group">\
-                <li class="list-group-item">Direct : '+data.direct+', Amount : &#8377; '+data.directAmt+' </li>\
-                <li class="list-group-item">Maching Pair : '+data.pairMatch+', Amount : &#8377; '+data.pairMatchAmt+'</li>\
-                <li class="list-group-item">Incentive : &#8377; 0</li>\
-                 <li class="list-group-item">Gift : Not appeared</li>\
-                 <li class="list-group-item">Tour : Not appeared</li>\
-              </ul>\
-              <br>\
-              <p>Total Withdraw : &#8377; '+data.totalEarning+' </p>\
-              <p>Remening Balance : &#8377; '+data.totalEarning+' </p>\
-            </div>\
-          </div>');
+      if(data){
+        var balance = Number(data.totalEarning) - Number(data.totalWithdrawal)
+
+        $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+        $("#view").css({"display":"none"});
+        $("#view1").html('<div class="card m-2" style="">\
+              <div class="card-header">\
+                 <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+                <p style="text-align: center; font-size: 20px; font-weight: bolder;">'+data.designation+'</p>\
+                 Earnings \
+              </div>\
+              <div class="card-body">\
+                <p>Total Earning : &#8377; '+Number(data.totalEarning).toFixed(2)+' </p>\
+                <ul class="list-group">\
+                  <li class="list-group-item">Direct : '+data.direct+', Amount : &#8377; '+Number(data.directAmt).toFixed(2)+' </li>\
+                  <li class="list-group-item">Maching Pair : '+data.machingPair+', Amount : &#8377; '+Number(data.machingPairAmt).toFixed(2)+'</li>\
+                  <li class="list-group-item">Incentive : &#8377; '+Number(data.incentive).toFixed(2)+'</li>\
+                  <li class="list-group-item">Incentive Count : &#8377; '+data.incentiveMonthCount+'</li>\
+                   <li class="list-group-item">Gift : '+data.giftAchive+'</li>\
+                   <li class="list-group-item">Tour : '+data.tourAchive+'</li>\
+                </ul>\
+                <br>\
+                <p>Total Withdraw : &#8377; '+Number(data.totalWithdrawal).toFixed(2)+' </p>\
+                <p>Remening Balance : &#8377; '+balance.toFixed(2)+' </p>\
+              </div>\
+            </div>');
+      }else{
+        $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+        $("#view").css({"display":"none"});
+        $("#view1").html('<div class="card m-2" style="">\
+              <div class="card-header">\
+                 <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+                Earnings \
+              </div>\
+              <div class="card-body">\
+                <p>Total Enrning : &#8377; 0.00</p>\
+                 <p>Try to Match criteria of 2:1 or 1:2 </p>\
+              </div>\
+            </div>');
+      }
+      
     })
    
   }

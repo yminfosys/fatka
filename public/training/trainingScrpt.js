@@ -761,21 +761,21 @@ function newRegister(){
 
   function withdrawalInit(userID){
 
-    $.post('https://richrova.co.uk/training/earningData',{userID:userID},  function(data){
-      console.log("API", data)
-    })
-    // $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
-    // $("#view").css({"display":"none"});
-    // $("#view1").html('<div class="card m-2" style="">\
-    //       <div class="card-header">\
-    //          <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
-    //         Withdrawal \
-    //       </div>\
-    //       <div class="card-body">\
-    //         <p>Withdrawl Balance : &#8377; 0.00</p>\
-    //         \
-    //       </div>\
-    //     </div>');
+    // $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:"1718513521751"},  function(data){
+    //   console.log("API", data)
+    // })
+    $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+    $("#view").css({"display":"none"});
+    $("#view1").html('<div class="card m-2" style="">\
+          <div class="card-header">\
+             <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+            Withdrawal \
+          </div>\
+          <div class="card-body">\
+            <p>Withdrawl Balance : &#8377; 0.00</p>\
+            \
+          </div>\
+        </div>');
 
   
   }

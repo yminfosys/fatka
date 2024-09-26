@@ -6,7 +6,7 @@ var auto_incriment=require('../module/db/autoIncriment');
 var dotenv=require('dotenv').config();
 const moment=require('moment');
 
-var cors = require('cors')
+
 
 const bcrypt = require('bcrypt');
 const { ExplainVerbosity } = require('mongodb');
@@ -286,18 +286,9 @@ router.post('/mydirect', async function(req, res, next) {
   });
 
 
-var whitelist = ['http://localhost:3001', 'https://richrova.co.uk']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
 
-  router.post('/earningData', cors(corsOptions), async function(req, res, next) {
+
+  router.post('/earningData',  async function(req, res, next) {
     try {
       await dbCon.connectDB();
       const benifit = await db.benifit.findOne({userID:req.body.userID});

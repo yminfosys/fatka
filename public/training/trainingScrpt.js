@@ -352,7 +352,7 @@ function newRegister(){
       </div>\
     </div>\
     <div class="col-4 mb-3">\
-      <div class="card"  >\
+      <div class="card" onclick = "earningData(\''+userID+'\')">\
         <div class="card-body" style="height: 11vh; background-image: linear-gradient(#FFD700,#dc6714bd); color: #6617dc; text-align: center;">\
           <span><i style="font-size: 25px;" class="fa fa-inr" aria-hidden="true"></i></span>\
           <p class="card-text text-center" style="font-size:small;  font-weight: bold; ">Total Earning</p>\
@@ -711,7 +711,7 @@ function newRegister(){
 
   function earningData(userID){
     $.post('/training/earningData',{userID:userID},  function(data){
-      console.log(data)
+      //console.log(data)
       if(data){
         var balance = Number(data.totalEarning) - Number(data.totalWithdrawal)
         var direct = Number(data.directL) + Number(data.directR)

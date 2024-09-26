@@ -204,9 +204,11 @@ function newRegister(){
     //   if(user){
     //     mainContent(user);
     //   }
-    
+
+    $("#waitingGif").css({"display":"block"});
     $.post('/training/earningCalculation',{userID:userID},function(user){
       mainContent(user);
+      $("#waitingGif").css({"display":"none"})
     })
     // $.post('/training/GetUser',{userID:userID},function(user){
     //   mainContent(user);
@@ -711,7 +713,7 @@ function newRegister(){
 
   function earningData(userID){
     $.post('/training/earningData',{userID:userID},  function(data){
-      //console.log(data)
+     // console.log(data)
       if(data){
         var balance = Number(data.totalEarning) - Number(data.totalWithdrawal)
         var direct = Number(data.directL) + Number(data.directR)

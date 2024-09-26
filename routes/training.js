@@ -286,7 +286,7 @@ router.post('/mydirect', async function(req, res, next) {
   });
 
 
-var whitelist = ['http://example1.com', 'http://example2.com']
+var whitelist = ['http://localhost:3001', 'https://richrova.co.uk']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {

@@ -352,7 +352,7 @@ function newRegister(){
       </div>\
     </div>\
     <div class="col-4 mb-3">\
-      <div class="card" onclick = "earningData(\''+userID+'\')">\
+      <div class="card"  >\
         <div class="card-body" style="height: 11vh; background-image: linear-gradient(#FFD700,#dc6714bd); color: #6617dc; text-align: center;">\
           <span><i style="font-size: 25px;" class="fa fa-inr" aria-hidden="true"></i></span>\
           <p class="card-text text-center" style="font-size:small;  font-weight: bold; ">Total Earning</p>\
@@ -360,7 +360,7 @@ function newRegister(){
       </div>\
     </div>\
     <div class="col-4 mb-3">\
-      <div class="card">\
+      <div class="card" onclick = "withdrawalInit(\''+userID+'\')">\
         <div class="card-body" style="height: 11vh; background-image: linear-gradient(#FFD700,#dc6714bd); color: #6617dc; text-align: center;">\
           <span><i style="font-size: 25px;" class="fa fa-university" aria-hidden="true"></i></span>\
           <p class="card-text text-center" style="font-size:small;  font-weight: bold; ">Bank Withdraw</p>\
@@ -657,7 +657,18 @@ function newRegister(){
      return out;
   }
   
-
+  function wellcomLetter(userID){
+    $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+      $("#view").css({"display":"none"});
+      $("#view1").html('<div class="card m-2" style="">\
+            <div class="card-header">\
+               <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+            </div>\
+            <div class="card-body">\
+            <img src="/images/other/welcome.jpeg" class="card-img-top" alt="...">\
+            </div>\
+          </div>');
+  }
 
   function myDirect(userID){
     $.post('/training/mydirect',{userID:userID},  function(data){
@@ -695,6 +706,7 @@ function newRegister(){
       }
     })
   }
+  
 
 
   function earningData(userID){
@@ -702,7 +714,7 @@ function newRegister(){
       console.log(data)
       if(data){
         var balance = Number(data.totalEarning) - Number(data.totalWithdrawal)
-
+        var direct = Number(data.directL) + Number(data.directR)
         $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
         $("#view").css({"display":"none"});
         $("#view1").html('<div class="card m-2" style="">\
@@ -714,7 +726,7 @@ function newRegister(){
               <div class="card-body">\
                 <p>Total Earning : &#8377; '+Number(data.totalEarning).toFixed(2)+' </p>\
                 <ul class="list-group">\
-                  <li class="list-group-item">Direct : '+data.direct+', Amount : &#8377; '+Number(data.directAmt).toFixed(2)+' </li>\
+                  <li class="list-group-item">Direct : '+direct+', Amount : &#8377; '+Number(data.directAmt).toFixed(2)+' </li>\
                   <li class="list-group-item">Maching Pair : '+data.machingPair+', Amount : &#8377; '+Number(data.machingPairAmt).toFixed(2)+'</li>\
                   <li class="list-group-item">Incentive : &#8377; '+Number(data.incentive).toFixed(2)+'</li>\
                   <li class="list-group-item">Incentive Count : &#8377; '+data.incentiveMonthCount+'</li>\
@@ -745,18 +757,22 @@ function newRegister(){
    
   }
 
-  function wellcomLetter(userID){
+  function withdrawalInit(userID){
     $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
-      $("#view").css({"display":"none"});
-      $("#view1").html('<div class="card m-2" style="">\
-            <div class="card-header">\
-               <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
-            </div>\
-            <div class="card-body">\
-            <img src="/images/other/welcome.jpeg" class="card-img-top" alt="...">\
-            </div>\
-          </div>');
+    $("#view").css({"display":"none"});
+    $("#view1").html('<div class="card m-2" style="">\
+          <div class="card-header">\
+             <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+            Withdrawal \
+          </div>\
+          <div class="card-body">\
+            <p>Withdrawl Balance : &#8377; 0.00</p>\
+            \
+          </div>\
+        </div>');
   }
+
+
  
 
   function closingElement(div){

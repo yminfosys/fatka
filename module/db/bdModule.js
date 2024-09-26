@@ -188,7 +188,8 @@ var trainingusermodul = mongoose.model('trainingusers', traininguserSchema);
 
 
 const benifitSchema = new mongoose.Schema({ 
-    direct:String,
+    directL:String,
+    directR:String,
     directAmt:String,
     machingPair:String,
     machingPairAmt:String,

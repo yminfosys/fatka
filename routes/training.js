@@ -303,26 +303,26 @@ router.post('/mydirect', async function(req, res, next) {
     await dbCon.connectDB();
     const user = await db.traininguser.findOne({userID:req.body.userID});
     const benifit = await db.benifit.findOne({userID:req.body.userID});
-    console.log(benifit)
-    // const myleft = await db.traininguser.findOne({rootID:'' + user.rootID + '-1'});
-    // const myright = await db.traininguser.findOne({ootID:'' + user.rootID + '-2'});
-    // const leftVerify1 = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-1.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
-    // const rightVerify1 = await db.traininguser.countDocuments({rootID: { $regex: '.*' + user.rootID + '-2.*' , $options: 'i' }, varyficatinStatus:"Verify" } );
+   // console.log(benifit)
+    
    if(benifit){
     var  StartTime = moment(benifit.lastCheckDate).startOf('day').utc();
    }else{
     var  StartTime = moment(user.regdate).startOf('day').utc();
    }
-   //console.log("benifit",benifit)
+  
    
     var  EndTime = moment().subtract(1, 'days').endOf('day').utc();
     //var  EndTime = moment().endOf('day').utc();
+
+    //console.log("StartTime",StartTime,"EndTime",EndTime)
 
     const distingDate = await db.traininguser.distinct("activationDate",{ 
       activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()},
       rootID: { $regex: '.*' + user.rootID + '.*' , $options: 'i' }, 
       varyficatinStatus:"Verify"
       }); 
+
     const directL = await db.traininguser.countDocuments({
       parentSide:"L",
       directParentID:user.userID, 
@@ -335,29 +335,15 @@ router.post('/mydirect', async function(req, res, next) {
       varyficatinStatus:"Verify", 
       activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}
     });
-
-    // const dire = await db.traininguser.find({
-    //   parentSide:"R",
-    //   directParentID:user.userID, 
-    //   //varyficatinStatus:"Verify", 
-    //  // activationDate: { $gte: StartTime.toDate(), $lte: EndTime.toDate()}
-    // });
-
-    // //console.log(dire)
-
-
-    var direct= Number(directL) + Number(directR)
-   
+    //////To Satisfy 1st condition////////
     
-    //console.log(distingDate)
-    //console.log("Start Time:",StartTime,"End Time",EndTime)
-    //console.log(distingDate) 
+
+  
+    var direct= Number(directL) + Number(directR)
+
     await dbCon.closeDB();
-
-
       var leftVerify=0;
       var rightVerify=0;
-
       //// Caping///////////
       var dateProtectArry=[];
     for(var i=0; i<distingDate.length; i++ ){
@@ -406,22 +392,33 @@ router.post('/mydirect', async function(req, res, next) {
   var directAmt= Number(pecentage10) * direct
   var pairMatchAmt = pecentage10 * Number(match)
   var totalEarning= Number(pairMatchAmt) + Number(directAmt);
-
   //console.log("directL",directL,"directR",directR)
+  if(benifit){
+     var Dl =  Number(benifit.directL) + Number(directL);
+     var Dr =  Number(benifit.directR) + Number(directR);
+     var totalDirect= Number(Dl) + Number(Dr);
+     var totalmatch = Number(benifit.machingPair) + Number(match);
+  }else{
+    var Dl =   Number(directL);
+    var Dr =   Number(directR);
+    var totalDirect= Number(Dl) + Number(Dr);
+    var totalmatch =  Number(match);
+  }
+ 
 
-    if(directL > 0  && directR > 0 && user.varyficatinStatus=="Verify"){
+    if(Dl > 0  && Dr > 0 && user.varyficatinStatus=="Verify"){
       //////condition 2//////
-      if(match > 24){
+      if(totalmatch > 24){
         //////condition 3//////
-        if(match > 49 && direct > 3){
+        if(totalmatch > 49 && totalDirect > 3){
           //////condition 4//////
-          if(match > 99 && direct > 3){
+          if(totalmatch > 99 && totalDirect > 3){
             //////condition 5//////
-            if(match > 99 && direct > 6){
+            if(totalmatch > 99 && totalDirect > 6){
               //////condition 6//////
-              if(match > 249 && direct > 8){
+              if(totalmatch > 249 && totalDirect > 8){
                 //////condition 7//////
-              if(match > 500 && direct > 10){
+              if(totalmatch > 500 && totalDirect > 10){
 
               }else{
                 ////procid to 6th result
@@ -437,13 +434,31 @@ router.post('/mydirect', async function(req, res, next) {
 
           }else{
             ////procid to 3rd result
+            // const earningres =  await updateEarning({
+            //   directL:directL,
+            //   directR:directR,
+            //   directAmt:directAmt,
+            //   machingPair:match,
+            //   machingPairAmt:pairMatchAmt,
+            //   tourAchive:"National Tour",
+            //   incentive:2000,
+            //   incentiveMonthCount:0,
+            //   giftAchive:"Mobile",
+            //   userID:user.userID,
+            //   userName:user.userName,
+            //   designation:"Premium Club Member",
+            //   totalEarning:totalEarning,
+            //   })
+            //   console.log(earningres)
+            //   res.json(user)
 
           }
 
         }else{
            ////procid to 2nd result
            const earningres =  await updateEarning({
-            direct:direct,
+            directL:directL,
+            directR:directR,
             directAmt:directAmt,
             machingPair:match,
             machingPairAmt:pairMatchAmt,
@@ -464,7 +479,8 @@ router.post('/mydirect', async function(req, res, next) {
       }else{
         ////procid to 1st result
        const earningres =  await updateEarning({
-        direct:direct,
+        directL:directL,
+        directR:directR,
         directAmt:directAmt,
         machingPair:match,
         machingPairAmt:pairMatchAmt,
@@ -525,13 +541,14 @@ router.post('/mydirect', async function(req, res, next) {
 
 
 async function updateEarning(req){
-  console.log(req);
+ // console.log(req);
   await dbCon.connectDB();
   const benifit = await db.benifit.findOne({userID:req.userID});
-   
-  
+ // console.log("Benifit", benifit);
   if(benifit ){
-    var direct = Number(benifit.direct) + Number(req.direct);
+   
+    var directL =  Number(benifit.directL) + Number(req.directL);
+    var directR = Number(benifit.directR) + Number(req.directR);
     var directAmt = Number(benifit.directAmt) + Number(req.directAmt);
     var machingPair = Number(benifit.machingPair) + Number(req.machingPair);
     var machingPairAmt = Number(benifit.machingPairAmt) + Number(req.machingPairAmt);
@@ -541,9 +558,10 @@ async function updateEarning(req){
     var giftAchive = req.giftAchive;
     var totalEarning = Number(benifit.totalEarning) + Number(req.totalEarning);
     var designation = req.designation;
-    const benifit = await db.benifit.findOneAndUpdate({userID:req.userID},{$set:{
+    const beni = await db.benifit.findOneAndUpdate({userID:req.userID},{$set:{
       designation:designation,
-      direct: direct,
+      directL:directL,
+      directR:directR,
       directAmt: directAmt,
       machingPair: machingPair,
       machingPairAmt: machingPairAmt,
@@ -557,7 +575,8 @@ async function updateEarning(req){
     await dbCon.closeDB();
     
   }else{
-    var direct =  Number(req.direct);
+    var directL =  Number(req.directL);
+    var directR =  Number(req.directR);
     var directAmt =  Number(req.directAmt);
     var machingPair =  Number(req.machingPair);
     var machingPairAmt =   Number(req.machingPairAmt);
@@ -571,7 +590,8 @@ async function updateEarning(req){
       userID:req.userID,
       userName:req.userName,
       designation:designation,
-      direct: direct,
+      directL:directL,
+      directR:directR,
       directAmt: directAmt,
       machingPair: machingPair,
       machingPairAmt: machingPairAmt,

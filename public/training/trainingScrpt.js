@@ -773,7 +773,16 @@ function newRegister(){
           </div>\
           <div class="card-body">\
             <p>Withdrawl Balance : &#8377; 0.00</p>\
-            \
+            <div class="mb-3">\
+              <label  class="form-label">Friend\'s ID :</label>\
+              <input type="text" class="form-control" id="FriendUserID" placeholder="RR-5010">\
+            </div>\
+            <button type="button" class="btn btn-outline-warning mb-3">Buy Pin</button>\
+            <div class="mb-3">\
+              <label  class="form-label">Account No :</label>\
+              <input type="text" class="form-control" id="paaAccount">\
+            </div>\
+            <button type="button" class="btn btn-outline-warning">Withdrawl</button>\
           </div>\
         </div>');
 

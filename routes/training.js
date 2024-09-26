@@ -6,6 +6,8 @@ var auto_incriment=require('../module/db/autoIncriment');
 var dotenv=require('dotenv').config();
 const moment=require('moment');
 
+var cors = require('cors')
+
 const bcrypt = require('bcrypt');
 const { ExplainVerbosity } = require('mongodb');
 const saltRounds = 10;
@@ -284,7 +286,7 @@ router.post('/mydirect', async function(req, res, next) {
   });
 
 
-  router.post('/earningData', async function(req, res, next) {
+  router.post('/earningData', cors(), async function(req, res, next) {
     try {
       await dbCon.connectDB();
       const benifit = await db.benifit.findOne({userID:req.body.userID});
@@ -297,7 +299,7 @@ router.post('/mydirect', async function(req, res, next) {
   
   });
 
-  router.post('/earningCalculation', async function(req, res, next) {
+  router.post('/earningCalculation',  async function(req, res, next) {
   
     try {
     await dbCon.connectDB();

@@ -822,33 +822,39 @@ function newRegister(){
       }
 
 ////////Check name//////
-  const paa = await $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:"1718513521751"})
+  const paa = await $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:paaAccount})
+if(paa){
+  if(paa.userName.toUpperCase() == userName.toUpperCase()){
+    $.post('/training/withdrawlProcid',{
+      userID:userID,
+      withAmtAdminAmt:withAmtAdminAmt,
+      paaAccount: paaAccount,
+      admincost:admincost,
+      transferAmt:paaAmount
+    }, function(data){
+      console.log("user",data)
+              $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+              $("#view").css({"display":"none"});
+              $("#view1").html('<div class="card m-2" style="">\
+                <div class="card-header">\
+                  <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+                  Withdrawal \
+                </div>\
+                <div class="card-body">\
+                  <p>Withdrawl Request Success <br/>It will Take Up to 72 hr </p>\
+                </div>\
+              </div>');
+    })
 
-    if(paa.userName.toUpperCase() == userName.toUpperCase()){
-      $.post('/training/withdrawlProcid',{
-        userID:userID,
-        withAmtAdminAmt:withAmtAdminAmt,
-        paaAccount: paaAccount,
-        admincost:admincost,
-        transferAmt:paaAmount
-      }, function(data){
-        console.log("user",data)
-                $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
-                $("#view").css({"display":"none"});
-                $("#view1").html('<div class="card m-2" style="">\
-                  <div class="card-header">\
-                    <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
-                    Withdrawal \
-                  </div>\
-                  <div class="card-body">\
-                    <p>Withdrawl Request Success <br/>It will Take Up to 72 hr </p>\
-                  </div>\
-                </div>');
-      })
+    }else{
+      alert("Name Not Match with Bank ")
+    }
 
-      }else{
-        alert("Name Not Match with Bank ")
-      }
+}else{
+  alert("Worng account No")
+  return;
+}
+
     }else{
       alert("Amount Exid");
       $("#paaAmount").focus();

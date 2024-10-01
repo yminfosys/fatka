@@ -137,7 +137,7 @@ function newRegister(){
     var userName=$("#userName").val().trim().toUpperCase();
     var email=$("#email").val().replace(/\s/g, '').toLowerCase();
     var mobileNo=$("#mobileNo").val().trim();
-    var password=$("#password").val().trim();;
+    var password=$("#password").val().trim();
     var parentSide=$("#parentSide").val().trim();;
     var refID=$("#refID").val().trim();
     
@@ -761,33 +761,105 @@ function newRegister(){
 
   function withdrawalInit(userID){
 
-    // $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:"1718513521751"},  function(data){
-    //   console.log("API", data)
-    // })
-    $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
-    $("#view").css({"display":"none"});
-    $("#view1").html('<div class="card m-2" style="">\
-          <div class="card-header">\
-             <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
-            Withdrawal \
-          </div>\
-          <div class="card-body">\
-            <p>Withdrawl Balance : &#8377; 0.00</p>\
-            <div class="mb-3">\
-              <label  class="form-label">Friend\'s ID :</label>\
-              <input type="text" class="form-control" id="FriendUserID" placeholder="RR-5010">\
+
+
+    $.post('/training/getWithdrawlBalance',{userID:userID},  function(data){
+      console.log(data)
+      var WithdrawalBalance = 0;
+      if(data){
+        WithdrawalBalance = Number(data.totalEarning) - Number(data.totalWithdrawal);
+      }
+      
+      console.log(WithdrawalBalance)
+      $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+      $("#view").css({"display":"none"});
+      $("#view1").html('<div class="card m-2" style="">\
+            <div class="card-header">\
+               <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+              Withdrawal \
             </div>\
-            <button type="button" class="btn btn-outline-warning mb-3">Buy Pin</button>\
-            <div class="mb-3">\
-              <label  class="form-label">Account No :</label>\
-              <input type="text" class="form-control" id="paaAccount">\
+            <div class="card-body">\
+              <p>Withdrawl Balance : &#8377; '+WithdrawalBalance.toFixed(2)+'</p>\
+              <div class="mb-3">\
+                <label  class="form-label">Friend\'s ID :</label>\
+                <input type="text" class="form-control" id="FriendUserID" placeholder="RR-5010">\
+              </div>\
+              <button type="button" class="btn btn-outline-warning mb-3">Buy Pin</button>\
+              <div class="mb-3">\
+                <label  class="form-label">Account No :</label>\
+                <input type="text" class="form-control" id="paaAccount">\
+              </div>\
+               <div class="mb-3">\
+                <label  class="form-label">Amount :</label>\
+                <input type="text" class="form-control" id="paaAmount">\
+              </div>\
+              <button onclick="withrawalProcess(\''+userID+'\',\''+WithdrawalBalance+'\',\''+data.userName+'\')" type="button" class="btn btn-outline-warning mb-3">Withdrawl</button>\
+              <p>NB: 5 % Admin Charge</p>\
             </div>\
-            <button type="button" class="btn btn-outline-warning">Withdrawl</button>\
-          </div>\
-        </div>');
+          </div>');
+    })
+   
 
   
   }
+
+  async function withrawalProcess(userID,WithdrawalBalance,userName){
+    var paaAccount = $("#paaAccount").val().trim();
+    var paaAmount = $("#paaAmount").val().trim();
+    var admincost =  Number(paaAmount) * 5/100;
+
+    var withAmtAdminAmt = Number(paaAmount) + Number(admincost);
+    if(withAmtAdminAmt < Number(WithdrawalBalance)){
+      if(paaAccount.length < 10){
+        alert("Enter Paa Crypto Bank Account Nomber");
+        $("#paaAccount").focus();
+        return;
+      }
+      if(withAmtAdminAmt < 100){
+        alert("Enter Amount Minimum Amount Rs 100");
+        $("#paaAmount").focus();
+        return;
+      }
+
+////////Check name//////
+  const paa = await $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:"1718513521751"})
+
+    if(paa.userName.toUpperCase() == userName.toUpperCase()){
+      $.post('/training/withdrawlProcid',{
+        userID:userID,
+        withAmtAdminAmt:withAmtAdminAmt,
+        paaAccount: paaAccount,
+        admincost:admincost,
+        transferAmt:paaAmount
+      }, function(data){
+        console.log("user",data)
+                $("#view1").css({"display":"block" , "background-color": "rgb(32, 77, 77)"});
+                $("#view").css({"display":"none"});
+                $("#view1").html('<div class="card m-2" style="">\
+                  <div class="card-header">\
+                    <span  onclick="closingElement(\'view1\')" style="color:red; float:right; padding: 5px; border-radius: 10px; border: 1px solid #0f0707; margin-top: 3vh;" class="badge">X</span>\
+                    Withdrawal \
+                  </div>\
+                  <div class="card-body">\
+                    <p>Withdrawl Request Success <br/>It will Take Up to 72 hr </p>\
+                  </div>\
+                </div>');
+      })
+
+      }else{
+        alert("Name Not Match with Bank ")
+      }
+    }else{
+      alert("Amount Exid");
+      $("#paaAmount").focus();
+      return;
+    }
+
+  
+
+  }
+
+ 
 
 
   

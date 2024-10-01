@@ -190,6 +190,8 @@ var trainingusermodul = mongoose.model('trainingusers', traininguserSchema);
 const benifitSchema = new mongoose.Schema({ 
     directL:String,
     directR:String,
+    leftVerify:String,
+    rightVerify:String,
     directAmt:String,
     machingPair:String,
     machingPairAmt:String,
@@ -209,6 +211,20 @@ const benifitSchema = new mongoose.Schema({
 });
 var benifitmodul = mongoose.model('trainingbenifit', benifitSchema);
 
+const trainingwithdrawlSchema = new mongoose.Schema({ 
+   
+    userID:String,
+    userName:String,
+    transferAmt:String,
+    adminCost:String,
+    paaAccountno:String,
+    totalWithdrawl:String,
+    status:String,
+    date: { type: Date, default: Date.now }
+
+});
+var trainingwithdrawlmodul = mongoose.model('trainingwithdrawl', trainingwithdrawlSchema);
+
 module.exports={
     counter:countermodul,
     user:usermodul,
@@ -222,7 +238,8 @@ module.exports={
     withdrawal:withdrawalmodul,
     ///////Training///////////
     traininguser:trainingusermodul,
-    benifit:benifitmodul
+    benifit:benifitmodul,
+    trainingwithdrawl:trainingwithdrawlmodul
 }
 
 

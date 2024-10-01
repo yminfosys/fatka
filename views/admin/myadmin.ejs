@@ -24,7 +24,8 @@
 
     <body>
 
-        
+         <!-- check alredy login -->
+     <input type="hidden" id="allredyloginuserID" value="<%=allredylogin%>">
 
 
         <div id="sidebar-waper">
@@ -67,19 +68,58 @@
                     <li><a href="#" onclick="setTrainingStartUserid()">Set Start User ID</a></li>
                     <li><a href="#" onclick="activationPinGenerate()">Generate Activation Pin</a></li>
                     <li><a href="#" onclick="trforgetpasswordInit()">Forget Password</a></li>
-                    <li><a href="#" onclick="trainingFee()">Fee adjust</a></li>
+                    <!-- <li><a href="#" onclick="trainingFee()">Fee adjust</a></li> -->
+                    <li><a href="#" onclick="trainingWithdrawlRequiest()">Withdrawl</a></li>
                     
                 </ul>
               </li>
             
             
-            <li class="Logout"><a href="/india/admin/logout"> <span> Logout</span></a></li>
+            <li onclick="logout()" class="Logout"><a href="#"> <span> Logout</span></a></li>
             </ul>
         </div>
 
+        
+
+        <div id="login"  class="container-fluid p-2" style="margin-top: 10vh; " >
+                <div class="row mb-3">
+                  <div style="text-align: center; margin-top: 15vh;" class="col">
+                    <div style="font-size: 35px; font-weight:bold;">Log in</div>
+                    <span>Fill the form to Admin log in</span>
+                  </div>
+                </div>
+                <div class="card mb-3" style="background-color: #ccdbe6;">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Email address</label>
+                      <input style=" text-decoration: none;"  type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label ">Password</label>
+                      <input type="password" class="form-control" id="password">
+                    </div>
+                  </div>
+                </div>
+                <!-- <p class="float-start">Register</p>
+                <p class="float-end">Forget Password</p> -->
+                <div class="fixed-bottom">
+                    <div class="container-fluid mb-3">
+                      <div  class="d-grid gap-2">
+                        <button onclick="login()" class="btn btn-primary " type="button">Login</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
         <div id="main-content">  
 
+            
+            
+            
+            
+
             <div style="margin-top: 1vh;" id="view">
+
 
 
             </div>

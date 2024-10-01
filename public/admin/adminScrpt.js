@@ -1,29 +1,82 @@
 $( document ).ready(function() {
     var allredyloginuserID=$("#allredyloginuserID").val();
-    $("#allUser").css({"display":"blocke"})
-    $("#sidebar-waper").css({"display":"nonee"})
+//alert(allredyloginuserID)
+    if(allredyloginuserID){
+        $("#login").css({"display":"none"});
+        $("#view").css({"display":"block"});
+        $("#login").css({"display":"none"});
+        $("#sidebar-waper").css({"display":"block"});
+        $("#allUser").css({"display":"blocke"});
+        $("#sidebar-waper").css({"display":"nonee"});
+        $("#allUser g").html('<div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">\
+                <div class="panel panel-success">\
+                      <div class="panel-heading">\
+                            <h3 class="panel-title">Login</h3>\
+                      </div>\
+                      <div class="panel-body">\
+                            <div class="form-group">\
+                                <label>Username</label>\
+                                    <input type="text" name="" id="loginEmail" class="form-control" placeholder="User Email">\
+                            </div>\
+                            <div class="form-group">\
+                                <label>Password</label>\
+                                    <input type="password" name="" id="loginPassword" class="form-control" placeholder="Password">\
+                            </div>\
+                            <button onclick="loginProcess()" type="button" class="btn btn-primary">Login</button>\
+                            <button onclick="forgetpassword()" type="button" class="btn btn-sm-square btn-danger" style="margin-left: 4vh;">Forget Password</button>\
+                      </div>\
+                </div>\
+        </div>')
+        
+    }else{
+        loginClick();
+    }
     
-    $("#allUser g").html('<div  class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">\
-            <div class="panel panel-success">\
-                  <div class="panel-heading">\
-                        <h3 class="panel-title">Login</h3>\
-                  </div>\
-                  <div class="panel-body">\
-                        <div class="form-group">\
-                            <label>Username</label>\
-                                <input type="text" name="" id="loginEmail" class="form-control" placeholder="User Email">\
-                        </div>\
-                        <div class="form-group">\
-                            <label>Password</label>\
-                                <input type="password" name="" id="loginPassword" class="form-control" placeholder="Password">\
-                        </div>\
-                        <button onclick="loginProcess()" type="button" class="btn btn-primary">Login</button>\
-                        <button onclick="forgetpassword()" type="button" class="btn btn-sm-square btn-danger" style="margin-left: 4vh;">Forget Password</button>\
-                  </div>\
-            </div>\
-    </div>')
+    
 
 });
+
+
+function loginClick(){
+    $("#sidebar-waper").css({"display":"none"});
+    $("#login").css({"display":"block"});
+    $("#view").css({"display":"none"});
+
+}
+
+function login(){
+    var email=$("#email").val().trim();
+    var password=$("#password").val().trim();
+    console.log(email,password)
+    $.post('/admin/login',{email:email,password:password},function(data){
+        if(data=="success"){
+           location.replace("/admin");
+        }else{
+            alert(data);
+        }
+       
+    })
+}
+
+function logout(){
+    $.post('/admin/logout',{},function(data){
+        if(data){
+            location.replace("/admin");
+           
+        }
+    })
+
+  }
+
+  function logout(){
+    $.post('/admin/logout',{},function(data){
+        if(data){
+            location.replace("/admin");
+           
+        }
+    })
+
+  }
 
 
 

@@ -178,4 +178,47 @@ function setTrainingStartUserid(){
     })
     
  }
+
+ 
+
+
+ function trainingWithdrawlRequiest(){
+    $.post('/admin/trainingWithdrawlRequiest',{},function(data){
+        //console.log(data);
+        $("#view").html('<div class="panel panel-info" style="padding: 5px;">\
+            <div class="panel-heading"  style="margin-top: 10vh;">\
+                  <h3 class="panel-title">Withdrawl Request</h3>\
+            </div>\
+            <div class="panel-body">\
+            <ul id="list_withdrawl" class="list-group" style="height: 60vh; overflow-y: auto;">\
+                </ul>\
+            </div>\
+         </div>')
+        if(data.length > 0){
+            data.forEach(val => {
+                $("#list_withdrawl").append('<li class="list-group-item">\
+                    Name: '+val.userName+' <br>Account: '+val.paaAccountno+'\
+                    <br>UserID: '+val.userID+'\
+                    <br> Tranfer Amt: Rs. '+val.transferAmt+'\
+                    <span onclick="markastransfer(\''+val.userID+'\')" class="badge">Mark as Tranfar </span>\
+                </li>')
+                
+            });
+
+        }else{
+            $("#list_withdrawl").append('<li class="list-group-item"> No Record Found</li>')
+
+        }
+    })
+    
+ }
+
+
+ function markastransfer(userID){
+    //console.log(userID)
+    $.post('/admin/markastransfer',{userID:userID},function(data){
+        trainingWithdrawlRequiest();
+    })
+ }
+
                 

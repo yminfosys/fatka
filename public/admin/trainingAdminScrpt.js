@@ -221,4 +221,103 @@ function setTrainingStartUserid(){
     })
  }
 
-                
+
+
+ //////////  Fund Crack//////////
+
+ function addFundCrack(){
+    $("#view").html('<div class="panel panel-info" style="padding: 5px;">\
+        <div class="panel-heading"  style="margin-top: 10vh;">\
+              <h3 class="panel-title">Fund Request</h3>\
+        </div>\
+        <div class="panel-body">\
+        <div class="form-group">\
+                    <label class="sr-only" for="">Account NO</label>\
+                    <input type="text" class="form-control" id="crkAccountNo" placeholder="Account No">\
+                </div>\
+                <div class="form-group">\
+                    <label class="sr-only" for="">Amount</label>\
+                    <input type="text" class="form-control" id="crkAmount" placeholder="Amount">\
+                </div>\
+                <div class="form-group">\
+                    <label class="sr-only" for="">USDT</label>\
+                    <input type="text" class="form-control" id="crkusdt" placeholder="USDT">\
+                </div>\
+                <button id="activeBtn" onclick="crackAddFund()" type="submit" class="btn btn-primary">Submit</button>\
+        </div>\
+     </div>')
+ }
+
+       
+ async function crackAddFund(){
+    var crkAccountNo= $("#crkAccountNo").val().trim();
+    var crkAmount= $("#crkAmount").val().trim();
+    var crkusdt= $("#crkusdt").val().trim();
+    //accountNumber, addBalance, addUSDTBalance
+    
+    if(crkAccountNo && crkAmount && crkusdt ) {
+        const paa1 = await $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:crkAccountNo})
+        console.log(paa1)
+        if(paa1){
+            const paa = await $.post('https://paacryptobank.com/api/fundCrack',{accountNumber:crkAccountNo,addBalance:crkAmount,addUSDTBalance:crkusdt}) 
+       if(paa){
+        console.log(paa)
+        $("#view").html('<div class="panel panel-info" style="padding: 5px;">\
+            <div class="panel-heading"  style="margin-top: 10vh;">\
+                  <h3 class="panel-title">Fund Success</h3>\
+            </div>\
+            <div class="panel-body">\
+            '+paa.lastcheckBalance+'\
+            '+paa.lastCheckUsdtAmount+'\
+            </div>\
+         </div>')
+       }
+        }
+    }else{
+        alert("Input Data")
+    }
+
+    //const paa = await $.post('https://paacryptobank.com/api/veryfiAccount',{accountNumber:paaAccount})
+ }
+
+
+ function trforgetpasswordInit(){
+    $("#forgetpassword").css({"display":"block"});
+    $("#forgetpassword").html('<div  class="col-xs-12 col-sm-12">\
+    <div class="panel panel-danger">\
+        <div class="panel-heading">\
+                <h3 class="panel-title">Forget Password List</h3>\
+        </div>\
+        <div class="panel-body">\
+              <ul class="list-group" id="forgetList">\
+              </ul>\
+        </div>\
+    </div>')
+    $.post('/admin/trainingforgetpasswordlist',{},function(fgpwlist){
+        if(fgpwlist.length >0 ){
+            fgpwlist.forEach(val => {
+                $("#forgetList").append('\
+            <li class="list-group-item">\
+            <span onclick="setNewPassword(\'' +val.userID + '\',\'' + val.newPassword + '\')" class="badge">Resolve</span>\
+            <span onclick="setNewPasswordCancel(\'' +val.userID + '\',\'' + val.newPassword + '\')" class="badge">Cancel</span>\
+            <p>Name: '+val.userName+' <br>Mobile: '+val.mobile+' \
+            <br>User-ID :'+val.userID+' Root-ID:'+val.rootID+' <br>Email : '+val.email+'</p>\
+            </li>')  
+            });
+          
+        }
+    })
+
+}
+
+function setNewPassword(userID,newPassword){
+    $.post('/admin/trainingsetNewPassword',{userID:userID,newPassword:newPassword},function(data){
+        forgetpasswordInit();
+    })
+    }
+    
+    function setNewPasswordCancel(userID,newPassword){
+        $.post('/admin/trainingsetNewPasswordCalcel',{userID:userID},function(data){
+            forgetpasswordInit();
+        })
+    }

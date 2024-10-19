@@ -681,6 +681,42 @@ router.post('/withdrawlProcid',  async function(req, res, next) {
 });
 
 
+router.post('/newPasswordRequest', async function(req, res, next) {
+  try {
+    await dbCon.connectDB();
+    const user= await db.traininguser.findOne({email:req.body.loginEmail})
+    console.log(user)
+    if(user){
+      ///////Check previous request/////////
+      const fgprexist= await db.trainingforgetPassword.findOne({userID:user.userID,status:"New"});
+      if(!fgprexist){
+        const forgetPasswor= await db.trainingforgetPassword({
+          userName:user.userName,
+          userID:user.userID,
+          rootID:user.rootID,
+          email:user.email,
+          mobile:user.mobile,
+          newPassword:req.body.newPasw,
+          status:"New"
+        })
+        await forgetPasswor.save();
+        await dbCon.closeDB();
+        res.send("ok")
+      }else{
+        await dbCon.closeDB();
+        res.send(null);
+      }
+
+    }else{
+      await dbCon.closeDB();
+      res.send(null);
+    }
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+})
+
 
 
 // async function datachenge(userID,dateee){

@@ -77,6 +77,34 @@ function loginProcess(){
   })
 }
 
+function forgetpassword(){
+  var loginEmail=$("#loginEmail").val().replace(/\s/g, '');
+  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/; 
+  if (reg.test(loginEmail) == false) 
+      {
+          alert('Invalid Email Address');
+          $("#loginEmail").focus();
+          return 
+      }
+     var newPasw = prompt("Enter New Password");
+
+     if(newPasw.length < 6){
+          alert('Password Must be 6 to 18 charecter');
+          return
+          
+      } 
+      $.post('/training/newPasswordRequest',{loginEmail:loginEmail,newPasw:newPasw},function(data){
+          if(data){
+              alert("Your Request to set New Password is successfully send to Admin Our executive call you soon" )
+          }else{
+              alert("User Id Not Match / Allredy has pending Request");
+          }
+      })
+
+
+  
+}
+
 function logout(){
   $.post('/training/logout',{},function(data){
     location.replace("/training");
@@ -197,6 +225,10 @@ function newRegister(){
               }
           })
   }
+
+
+
+ 
 
 
   function getUserprofile(userID){

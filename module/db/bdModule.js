@@ -59,6 +59,7 @@ const forgetPasswordSchema = new mongoose.Schema({
     status:String,
     daterequest: { type: Date, default: Date.now }
 });
+
 var forgetPasswordmodul = mongoose.model('moneyforgetpasswords', forgetPasswordSchema);
 
 
@@ -185,6 +186,18 @@ const traininguserSchema = new mongoose.Schema({
 var trainingusermodul = mongoose.model('trainingusers', traininguserSchema);
 
 
+const trainingforgetPasswordSchema = new mongoose.Schema({ 
+    userName:String,
+    userID:String,
+    rootID:String,
+    email:String,
+    mobile:String,
+    newPassword:String,
+    status:String,
+    daterequest: { type: Date, default: Date.now }
+});
+
+var trainingforgetPasswordmodul = mongoose.model('moneytrainingforgetpasswords', trainingforgetPasswordSchema);
 
 
 const benifitSchema = new mongoose.Schema({ 
@@ -239,7 +252,8 @@ module.exports={
     ///////Training///////////
     traininguser:trainingusermodul,
     benifit:benifitmodul,
-    trainingwithdrawl:trainingwithdrawlmodul
+    trainingwithdrawl:trainingwithdrawlmodul,
+    trainingforgetPassword:trainingforgetPasswordmodul
 }
 
 

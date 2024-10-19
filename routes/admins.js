@@ -167,6 +167,50 @@ router.post('/SetTrainingUserID', async function(req, res, next) {
   
 });
 
+
+router.post('/trainingforgetpasswordlist', async function(req, res, next) {
+  try {
+    await dbCon.connectDB();
+    const fgpsw= await db.trainingforgetPassword.find({status:"New"});
+  
+  await dbCon.closeDB();
+  res.json(fgpsw);
+  }catch (error) {
+    console.log(error);
+    return error;
+  }
+  
+});
+
+router.post('/trainingsetNewPassword', async function(req, res, next) {
+  bcrypt.hash(req.body.newPassword, saltRounds, async function(err, hash) {
+    await dbCon.connectDB();
+    const user= await db.traininguser.findOneAndUpdate({userID:req.body.userID},{$set:{password:hash}});
+    const fgpsw= await db.trainingforgetPassword.findOneAndUpdate({userID:req.body.userID,status:"New"},{$set:{status:"Resolve"}});
+   //console.log(fgpsw)
+    await dbCon.closeDB();
+    if(user){
+      res.send("ok")
+    }else{
+      res.send("error")
+    }
+
+  });
+});
+
+
+router.post('/trainingsetNewPasswordCalcel', async function(req, res, next) {
+  bcrypt.hash(req.body.newPassword, saltRounds, async function(err, hash) {
+    await dbCon.connectDB();
+    const fgpsw= await db.trainingforgetPassword.findOneAndUpdate({userID:req.body.userID,status:"New"},{$set:{status:"Cancel"}});
+   
+    await dbCon.closeDB();
+    res.send("ok")
+  
+
+  });
+});
+
 router.post('/checkuserexist', async function(req, res, next) {
   try {
   await dbCon.connectDB()
